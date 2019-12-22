@@ -1,5 +1,7 @@
 # https://swaprate.finance API specification
 
+Deployed on https://opiumprotocol.github.io/swaprate-api/
+
 ## Install
 
 Install `grip`
