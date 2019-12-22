@@ -1,0 +1,379 @@
+swagger: '2.0'
+info:
+  version: '1.1.3'
+  title: "SwapRate API"
+  description: |-
+    **Socket.io**
+    
+    There is also `socket.io` specification which could be found [here](socket.html)
+
+    **Authorization**
+
+    `Access token` is `base64` encoded JSON with following structure
+    ```
+    {
+      ttl: number, // UNIX token expiration timestamp used in signature
+      address: string, // User's public key
+      signature: string, // Signature of login message
+    }
+    ```
+host: api.test.swaprate.finance
+basePath: /v1
+schemes:
+- https
+consumes:
+- application/json
+produces:
+- application/json
+securityDefinitions:
+  AccessToken:
+    type: apiKey
+    in: header
+    name: Authorization
+    description: "Bearer $ACCESS_TOKEN"
+paths:
+  /auth/loginData:
+    get:
+      summary: Returns login message to sign and parameters
+      tags:
+        - Authentication
+      responses:
+        200:
+          description: Ok
+          schema:
+            $ref: '#/definitions/GetAuthLoginDataResponse'
+  /meta/config:
+    get:
+      summary: Returns object with configuration
+      tags:
+        - Meta
+      responses:
+        200:
+          description: Ok
+          schema:
+            $ref: '#/definitions/GetMetaConfigResponse'
+  /products:
+    get:
+      summary: Returns list of products currently available to trade
+      tags:
+        - Products
+      responses:
+        200:
+          description: Ok
+          schema:
+            $ref: '#/definitions/GetProductsResponse'
+  /products/{productId}/quote:
+    get:
+      summary: get the fixed rate of product that is possible with selected nominal
+      tags: 
+        - Products
+      parameters:
+        - in: path
+          name: productId
+          type: string
+          required: true
+          description: ID of the product to get the quote from
+        - in: query
+          name: maturity
+          type: integer
+          required: true
+          description: UNIX timestamp of one of supported maturities in seconds
+        - in: query
+          name: nominal
+          type: integer
+          required: true
+          description: Nominal of quoting order
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/OrderQuoteResponseBody'
+        404:
+          description: Not found
+        422:
+          description: Unprocessable entity
+        429:
+          description: Too many requests
+  /wallet/balance:
+    get:
+      summary: Returns object with balances and allowances
+      security:
+        - AccessToken: []
+      tags:
+        - Wallet
+      responses:
+        200:
+          description: Ok
+          schema:
+            $ref: '#/definitions/GetWalletBalanceResponse'
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+  /orders/form:
+    post:
+      summary: Forms blockchain order to sign
+      security:
+        - AccessToken: []
+      tags:
+        - Orders
+      parameters:
+        - in: body
+          name: FormeedOrder
+          schema:
+            $ref: '#/definitions/PostOrdersFormRequestBody'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/PostOrdersFormResponseBody' 
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: Not found
+        412:
+          description: Precondition Failed
+        422:
+          description: Unprocessable entity
+        429:
+          description: Too many requests
+  /orders/sign:
+    post:
+      summary: Accepts signed order and pushes it to matching engine
+      security:
+        - AccessToken: []
+      tags:
+        - Orders
+      parameters:
+        - in: body
+          name: SignedOrder
+          schema:
+            $ref: '#/definitions/PostOrdersSignRequestBody' 
+      responses:
+        201:
+          description: Created
+          schema:
+            $ref: '#/definitions/PostOrdersSignResponseBody'
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: Not found
+        409:
+          description: Conflict
+        412:
+          description: Precondition Failed
+        422:
+          description: Unprocessable entity
+        429:
+          description: Too many requests
+  /orders/cancel:
+    put:
+      summary: Cancels not filled orders
+      security:
+        - AccessToken: []
+      tags:
+        - Orders
+      parameters:
+        - in: query
+          name: orderIds
+          type: array
+          items:
+            type: string
+          description: An array of order ids to cancel
+      responses:
+        202:
+          description: Accepted
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: Not found
+        422:
+          description: Unprocessable entity
+definitions:
+  GetAuthLoginDataResponse:
+    type: object
+    properties:
+      ttl:
+        type: number
+      data:
+        type: object
+        properties:
+          types:
+            type: object
+            properties:
+              EIP712Domain:
+                type: array
+                items:
+                  properties:
+                    name:
+                      type: string
+                    type:
+                      type: string
+              Login:
+                type: array
+                items:
+                  properties:
+                    name:
+                      type: string
+                    type:
+                      type: string
+          primaryType:
+            type: string
+          domain:
+            type: object
+          message:
+            type: object
+  GetProductsResponse:
+    type: array
+    items:
+      properties:
+        productId:
+          type: string
+        title:
+          type: string
+        token:
+          type: string
+  GetMetaConfigResponse:
+    type: object
+    properties:
+      networkId:
+        type: number
+      defaults:
+        type: object
+        properties:
+          productId:
+            type: string
+      supportedTokens:
+        type: array
+        items:
+          properties:
+            title:
+              type: string
+            address:
+              type: string
+            decimals:
+              type: number
+      opiumContracts:
+        type: object
+        properties:
+          TokenSpender:
+            type: string
+      supportedMaturities:
+        type: array
+        items:
+          type: number
+          description: UNIX timestamp of supported maturities in seconds
+  PostOrdersFormRequestBody:
+    type: object
+    properties:
+      productId:
+        type: string
+      pay:
+        type: object
+        properties:
+          type:
+            type: string
+            enum:
+              - FIXED
+              - FLOATING
+            description: |-
+              `pay.type` and `receive.type` are mutually exclusive
+          rate:
+            type: number
+            description: Only considered if `type = FIXED`
+            min: 0
+            max: 1
+      receive:
+        type: object
+        properties:
+          type:
+            type: string
+            enum:
+              - FIXED
+              - FLOATING
+            description: |-
+              `pay.type` and `receive.type` are mutually exclusive
+          rate:
+            type: number
+            description: Only considered if `type = FIXED`
+            min: 0
+            max: 1
+      nominal:
+        type: number
+      maturity:
+        type: number
+        description: UNIX timestamp of one of supported maturities in seconds
+      partialFill:
+        type: boolean
+  PostOrdersFormResponseBody:
+    type: object
+    properties:
+      formedOrderId:
+        type: string
+      orderToSign:
+        type: object
+        properties:
+          types:
+            type: object
+            properties:
+              EIP712Domain:
+                type: array
+                items:
+                  properties:
+                    name:
+                      type: string
+                    type:
+                      type: string
+              Order:
+                type: array
+                items:
+                  properties:
+                    name:
+                      type: string
+                    type:
+                      type: string
+          primaryType:
+            type: string
+          domain:
+            type: object
+          message:
+            type: object
+  PostOrdersSignRequestBody:
+    type: object
+    properties:
+      formedOrderId:
+        type: string
+      signature:
+        type: string
+  PostOrdersSignResponseBody:
+    type: object
+    properties:
+      orderId:
+        type: string
+  GetWalletBalanceResponse:
+    type: object
+    properties:
+      eth:
+        type: number
+      tokens:
+        type: array
+        items:
+          properties:
+            title:
+              type: string
+            balance:
+              type: number
+            allowance:
+              type: number
+  OrderQuoteResponseBody:
+    type: object
+    properties:
+      fixedRate:
+        type: number
+        description: Necessary for instant match fixedRate

@@ -1,0 +1,34 @@
+{
+  "name": "swaprate-api",
+  "version": "1.1.3",
+  "description": "https://swaprate.finance API specification",
+  "main": "index.js",
+  "scripts": {
+    "generate": "spectacle src/swagger.yaml -t ./ -l ./favicon.png && grip src/SOCKET.md --export socket.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OpiumProtocol/swaprate-api.git"
+  },
+  "keywords": [
+    "IRS",
+    "Interest",
+    "Rate",
+    "Swap",
+    "Derivatives",
+    "Blockchain",
+    "Ethereum",
+    "Smart",
+    "Contracts"
+  ],
+  "author": "https://opium.team",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/OpiumProtocol/swaprate-api/issues"
+  },
+  "homepage": "https://github.com/OpiumProtocol/swaprate-api#readme",
+  "dependencies": {
+    "markdown-to-html": "0.0.13",
+    "spectacle-docs": "^1.0.7"
+  }
+}

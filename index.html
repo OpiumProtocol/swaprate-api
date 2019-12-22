@@ -1,0 +1,1928 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SwapRate API | API Reference</title>
+    <link rel="stylesheet" href="stylesheets/foundation.min.css" />
+    <link rel="stylesheet" href="stylesheets/spectacle.min.css" />
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <!-- <script src="javascripts/foundation.js"></script> -->
+    <script src="javascripts/spectacle.min.js"></script>
+  </head>
+  <body id="spectacle">
+    <div id="page" class="drawer-layout drawer-slide-right-large">
+      <div id="sidebar">
+        <button class="close-button" aria-label="Close menu" type="button" data-drawer-close>
+          <span aria-hidden="true">×</span>
+        </button>
+        <div id="logo">
+          <img src="images/favicon.png" title="SwapRate API" /> </div>
+        <nav id="nav" role="navigation">
+          <h5>Topics</h5>
+          <a href="#introduction">Introduction</a>
+          <a href="#authentication">Authentication</a>
+          <h5>Operations</h5>
+          <section>
+            <a href="#tag-Authentication">Authentication</a>
+            <ul>
+              <li>
+                <a href="#operation--auth-loginData-get"> Returns login message to sign and parameters </a>
+              </li>
+            </ul>
+          </section>
+          <section>
+            <a href="#tag-Meta">Meta</a>
+            <ul>
+              <li>
+                <a href="#operation--meta-config-get"> Returns object with configuration </a>
+              </li>
+            </ul>
+          </section>
+          <section>
+            <a href="#tag-Products">Products</a>
+            <ul>
+              <li>
+                <a href="#operation--products-get"> Returns list of products currently available to trade </a>
+              </li>
+              <li>
+                <a href="#operation--products--productId--quote-get"> get the fixed rate of product that is possible with selected nominal </a>
+              </li>
+            </ul>
+          </section>
+          <section>
+            <a href="#tag-Wallet">Wallet</a>
+            <ul>
+              <li>
+                <a href="#operation--wallet-balance-get"> Returns object with balances and allowances </a>
+              </li>
+            </ul>
+          </section>
+          <section>
+            <a href="#tag-Orders">Orders</a>
+            <ul>
+              <li>
+                <a href="#operation--orders-form-post"> Forms blockchain order to sign </a>
+              </li>
+              <li>
+                <a href="#operation--orders-sign-post"> Accepts signed order and pushes it to matching engine </a>
+              </li>
+              <li>
+                <a href="#operation--orders-cancel-put"> Cancels not filled orders </a>
+              </li>
+            </ul>
+          </section>
+          <h5>Schema Definitions</h5>
+          <a href="#definition-GetAuthLoginDataResponse"> GetAuthLoginDataResponse </a>
+          <a href="#definition-GetProductsResponse"> GetProductsResponse </a>
+          <a href="#definition-GetMetaConfigResponse"> GetMetaConfigResponse </a>
+          <a href="#definition-PostOrdersFormRequestBody"> PostOrdersFormRequestBody </a>
+          <a href="#definition-PostOrdersFormResponseBody"> PostOrdersFormResponseBody </a>
+          <a href="#definition-PostOrdersSignRequestBody"> PostOrdersSignRequestBody </a>
+          <a href="#definition-PostOrdersSignResponseBody"> PostOrdersSignResponseBody </a>
+          <a href="#definition-GetWalletBalanceResponse"> GetWalletBalanceResponse </a>
+          <a href="#definition-OrderQuoteResponseBody"> OrderQuoteResponseBody </a>
+        </nav>
+      </div>
+      <div id="docs" class="row collapse expanded drawer" data-drawer>
+        <button class="floating-menu-icon" type="button" data-drawer-slide="right">
+          <span class="hamburger"></span>
+        </button>
+        <div class="example-box doc-content"></div>
+        <article>
+          <h1 class="doc-title">SwapRate API
+            <span>API Reference</span>
+          </h1>
+          <div id="introduction" data-traverse-target="introduction">
+            <div class="doc-row">
+              <div class="doc-copy">
+                <p>
+                  <strong>Socket.io</strong>
+                </p>
+                <p>There is also <code>socket.io</code> specification which could be found
+                  <a href="socket.html">here</a>
+                </p>
+                <p>
+                  <strong>Authorization</strong>
+                </p>
+                <p><code>Access token</code> is <code>base64</code> encoded JSON with following structure</p> <pre><code class="hljs">{
+<span class="hljs-symbol">  ttl:</span> number, <span class="hljs-comment">// UNIX token expiration timestamp used in signature</span>
+<span class="hljs-symbol">  address:</span> string, <span class="hljs-comment">// User's public key</span>
+<span class="hljs-symbol">  signature:</span> string, <span class="hljs-comment">// Signature of login message</span>
+}
+</code></pre> </div>
+              <div class="doc-examples">
+                <section>
+                  <h5>API Endpoint</h5>
+                  <!-- <div class="hljs"> --><pre><code>https://api.test.swaprate.finance/v1</code></pre>
+                  <!-- </div> -->
+                  <h5>Request Content-Types:
+                    <span>application/json</span>
+                  </h5>
+                  <h5>Response Content-Types:
+                    <span>application/json</span>
+                  </h5>
+                  <h5>Schemes:
+                    <span>https</span>
+                  </h5>
+                  <h5>Version:
+                    <span>1.1.3</span>
+                  </h5>
+                </section>
+              </div>
+            </div>
+          </div>
+          <!-- <h1 id="security" data-traverse-target="security">Security</h1> -->
+          <h1 id="authentication" data-traverse-target="authentication">Authentication</h1>
+          <div id="security-definition-AccessToken" class="panel">
+            <div class="doc-row">
+              <div class="doc-copy">
+                <h3 class="security-definition-title">
+                  <span class="security-name">AccessToken</span>
+                  <span class="swagger-security-definition-apiKey"></span>
+                </h3>
+                <section class="security-definition-description">
+                  <p>Bearer $ACCESS_TOKEN</p>
+                </section>
+                <section class="swagger-security-definition-properties">
+                  <div class="prop-row security-definition-property">
+                    <div class="prop-name">
+                      <div class="prop-title security-definition-property-name">type</div>
+                    </div>
+                    <div class="prop-value security-definition-property-type"> apiKey </div>
+                  </div>
+                  <div class="prop-row security-definition-property">
+                    <div class="prop-name">
+                      <div class="prop-title security-definition-property-name">in</div>
+                    </div>
+                    <div class="prop-value security-definition-property-type"> header </div>
+                  </div>
+                  <div class="prop-row security-definition-property">
+                    <div class="prop-name">
+                      <div class="prop-title security-definition-property-name">name</div>
+                    </div>
+                    <div class="prop-value security-definition-property-type"> Authorization </div>
+                  </div>
+                </section>
+              </div>
+            </div>
+          </div>
+          <h1 id="tag-Authentication" class="swagger-summary-tag" data-traverse-target="tag-Authentication">Authentication</h1>
+          <div id="operation--auth-loginData-get" class="operation panel" data-traverse-target="operation--auth-loginData-get">
+            <!-- <section class="operation-tags row"> -->
+            <!-- <div class="doc-copy"> -->
+            <div class="operation-tags">
+              <a class="label" href="#tag-Authentication">Authentication</a>
+              <!---->
+            </div>
+            <!-- </div> -->
+            <!-- </section> -->
+            <h2 class="operation-title">
+              <span class="operation-summary">Returns login message to sign and parameters</span>
+            </h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="swagger-operation-path">
+                  <span class="operation-method">GET</span>
+                  <span class="operation-path">/auth/loginData</span>
+                </section>
+              </div>
+            </div>
+            <div class="doc-row">
+              <div class="doc-copy"> </div>
+              <div class="doc-examples"></div>
+            </div>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="swagger-responses">
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">200 OK</div>
+                      <div class="prop-ref">
+                        <span class="">
+                          <a class="json-schema-ref" href="#/definitions/GetAuthLoginDataResponse">GetAuthLoginDataResponse</a>
+                        </span>
+                      </div>
+                      <!-- <span class="swagger-global"></span> <span class="json-schema-reference"><a href=""></a></span> -->
+                    </div>
+                    <div class="prop-value">
+                      <p>Ok</p>
+                    </div>
+                  </div>
+                </section>
+              </div>
+              <div class="doc-examples">
+                <section>
+                  <h5>Response Example
+                    <span>(200 OK)</span>
+                  </h5>
+                  <!-- <div class="hljs"> -->
+                  <html>
+                  <head></head>
+                  <body><pre><code class="hljs language-json">{
+  <span class="hljs-attr">&quot;ttl&quot;</span>: <span class="hljs-string">&quot;number&quot;</span>,
+  <span class="hljs-attr">&quot;data&quot;</span>: {
+    <span class="hljs-attr">&quot;types&quot;</span>: {
+      <span class="hljs-attr">&quot;EIP712Domain&quot;</span>: [
+        {
+          <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+          <span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>
+        }
+      ],
+      <span class="hljs-attr">&quot;Login&quot;</span>: [
+        {
+          <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+          <span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>
+        }
+      ]
+    },
+    <span class="hljs-attr">&quot;primaryType&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+    <span class="hljs-attr">&quot;domain&quot;</span>: <span class="hljs-string">&quot;object&quot;</span>,
+    <span class="hljs-attr">&quot;message&quot;</span>: <span class="hljs-string">&quot;object&quot;</span>
+  }
+}
+</code></pre> </body>
+                  </html>
+                  <!-- </div> -->
+                </section>
+              </div>
+            </div>
+          </div>
+          <h1 id="tag-Meta" class="swagger-summary-tag" data-traverse-target="tag-Meta">Meta</h1>
+          <div id="operation--meta-config-get" class="operation panel" data-traverse-target="operation--meta-config-get">
+            <!-- <section class="operation-tags row"> -->
+            <!-- <div class="doc-copy"> -->
+            <div class="operation-tags">
+              <a class="label" href="#tag-Meta">Meta</a>
+              <!---->
+            </div>
+            <!-- </div> -->
+            <!-- </section> -->
+            <h2 class="operation-title">
+              <span class="operation-summary">Returns object with configuration</span>
+            </h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="swagger-operation-path">
+                  <span class="operation-method">GET</span>
+                  <span class="operation-path">/meta/config</span>
+                </section>
+              </div>
+            </div>
+            <div class="doc-row">
+              <div class="doc-copy"> </div>
+              <div class="doc-examples"></div>
+            </div>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="swagger-responses">
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">200 OK</div>
+                      <div class="prop-ref">
+                        <span class="">
+                          <a class="json-schema-ref" href="#/definitions/GetMetaConfigResponse">GetMetaConfigResponse</a>
+                        </span>
+                      </div>
+                      <!-- <span class="swagger-global"></span> <span class="json-schema-reference"><a href=""></a></span> -->
+                    </div>
+                    <div class="prop-value">
+                      <p>Ok</p>
+                    </div>
+                  </div>
+                </section>
+              </div>
+              <div class="doc-examples">
+                <section>
+                  <h5>Response Example
+                    <span>(200 OK)</span>
+                  </h5>
+                  <!-- <div class="hljs"> -->
+                  <html>
+                  <head></head>
+                  <body><pre><code class="hljs language-json">{
+  <span class="hljs-attr">&quot;networkId&quot;</span>: <span class="hljs-string">&quot;number&quot;</span>,
+  <span class="hljs-attr">&quot;defaults&quot;</span>: {
+    <span class="hljs-attr">&quot;productId&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>
+  },
+  <span class="hljs-attr">&quot;supportedTokens&quot;</span>: [
+    {
+      <span class="hljs-attr">&quot;title&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;address&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;decimals&quot;</span>: <span class="hljs-string">&quot;number&quot;</span>
+    }
+  ],
+  <span class="hljs-attr">&quot;opiumContracts&quot;</span>: {
+    <span class="hljs-attr">&quot;TokenSpender&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>
+  },
+  <span class="hljs-attr">&quot;supportedMaturities&quot;</span>: [
+    <span class="hljs-string">&quot;number&quot;</span>
+  ]
+}
+</code></pre> </body>
+                  </html>
+                  <!-- </div> -->
+                </section>
+              </div>
+            </div>
+          </div>
+          <h1 id="tag-Products" class="swagger-summary-tag" data-traverse-target="tag-Products">Products</h1>
+          <div id="operation--products-get" class="operation panel" data-traverse-target="operation--products-get">
+            <!-- <section class="operation-tags row"> -->
+            <!-- <div class="doc-copy"> -->
+            <div class="operation-tags">
+              <a class="label" href="#tag-Products">Products</a>
+              <!---->
+            </div>
+            <!-- </div> -->
+            <!-- </section> -->
+            <h2 class="operation-title">
+              <span class="operation-summary">Returns list of products currently available to trade</span>
+            </h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="swagger-operation-path">
+                  <span class="operation-method">GET</span>
+                  <span class="operation-path">/products</span>
+                </section>
+              </div>
+            </div>
+            <div class="doc-row">
+              <div class="doc-copy"> </div>
+              <div class="doc-examples"></div>
+            </div>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="swagger-responses">
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">200 OK</div>
+                      <div class="prop-ref">
+                        <span class="">
+                          <a class="json-schema-ref" href="#/definitions/GetProductsResponse">GetProductsResponse</a>
+                        </span>
+                      </div>
+                      <!-- <span class="swagger-global"></span> <span class="json-schema-reference"><a href=""></a></span> -->
+                    </div>
+                    <div class="prop-value">
+                      <p>Ok</p>
+                    </div>
+                  </div>
+                </section>
+              </div>
+              <div class="doc-examples">
+                <section>
+                  <h5>Response Example
+                    <span>(200 OK)</span>
+                  </h5>
+                  <!-- <div class="hljs"> -->
+                  <html>
+                  <head></head>
+                  <body><pre><code class="hljs language-json">[
+  {
+    <span class="hljs-attr">&quot;productId&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+    <span class="hljs-attr">&quot;title&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+    <span class="hljs-attr">&quot;token&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>
+  }
+]
+</code></pre> </body>
+                  </html>
+                  <!-- </div> -->
+                </section>
+              </div>
+            </div>
+          </div>
+          <div id="operation--products--productId--quote-get" class="operation panel" data-traverse-target="operation--products--productId--quote-get">
+            <!-- <section class="operation-tags row"> -->
+            <!-- <div class="doc-copy"> -->
+            <div class="operation-tags">
+              <a class="label" href="#tag-Products">Products</a>
+              <!---->
+            </div>
+            <!-- </div> -->
+            <!-- </section> -->
+            <h2 class="operation-title">
+              <span class="operation-summary">get the fixed rate of product that is possible with selected nominal</span>
+            </h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="swagger-operation-path">
+                  <span class="operation-method">GET</span>
+                  <span class="operation-path">/products/{productId}/quote</span>
+                </section>
+              </div>
+            </div>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="swagger-request-params">
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">productId:
+                        <span class="prop-type">
+                          <span class="json-property-type">string</span>
+                          <span class="json-property-range" title="Value limits"></span>
+                        </span>
+                      </div>
+                      <span class="json-property-required"></span>
+                      <div class="prop-subtitle"> in path </div>
+                    </div>
+                    <div class="prop-value">
+                      <p>ID of the product to get the quote from</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">maturity:
+                        <span class="prop-type">
+                          <span class="json-property-type">integer</span>
+                          <span class="json-property-range" title="Value limits"></span>
+                        </span>
+                      </div>
+                      <span class="json-property-required"></span>
+                      <div class="prop-subtitle"> in query </div>
+                    </div>
+                    <div class="prop-value">
+                      <p>UNIX timestamp of one of supported maturities in seconds</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">nominal:
+                        <span class="prop-type">
+                          <span class="json-property-type">integer</span>
+                          <span class="json-property-range" title="Value limits"></span>
+                        </span>
+                      </div>
+                      <span class="json-property-required"></span>
+                      <div class="prop-subtitle"> in query </div>
+                    </div>
+                    <div class="prop-value">
+                      <p>Nominal of quoting order</p>
+                    </div>
+                  </div>
+                </section>
+              </div>
+              <div class="doc-examples"></div>
+            </div>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="swagger-responses">
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">200 OK</div>
+                      <div class="prop-ref">
+                        <span class="">
+                          <a class="json-schema-ref" href="#/definitions/OrderQuoteResponseBody">OrderQuoteResponseBody</a>
+                        </span>
+                      </div>
+                      <!-- <span class="swagger-global"></span> <span class="json-schema-reference"><a href=""></a></span> -->
+                    </div>
+                    <div class="prop-value">
+                      <p>OK</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">404 Not Found</div>
+                    </div>
+                    <div class="prop-value">
+                      <p>Not found</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">422 Unprocessable Entity</div>
+                    </div>
+                    <div class="prop-value">
+                      <p>Unprocessable entity</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">429 Too Many Requests</div>
+                    </div>
+                    <div class="prop-value">
+                      <p>Too many requests</p>
+                    </div>
+                  </div>
+                </section>
+              </div>
+              <div class="doc-examples">
+                <section>
+                  <h5>Response Example
+                    <span>(200 OK)</span>
+                  </h5>
+                  <!-- <div class="hljs"> -->
+                  <html>
+                  <head></head>
+                  <body><pre><code class="hljs language-json">{
+  <span class="hljs-attr">&quot;fixedRate&quot;</span>: <span class="hljs-string">&quot;number&quot;</span>
+}
+</code></pre> </body>
+                  </html>
+                  <!-- </div> -->
+                </section>
+              </div>
+            </div>
+          </div>
+          <h1 id="tag-Wallet" class="swagger-summary-tag" data-traverse-target="tag-Wallet">Wallet</h1>
+          <div id="operation--wallet-balance-get" class="operation panel" data-traverse-target="operation--wallet-balance-get">
+            <!-- <section class="operation-tags row"> -->
+            <!-- <div class="doc-copy"> -->
+            <div class="operation-tags">
+              <a class="label" href="#tag-Wallet">Wallet</a>
+              <!---->
+            </div>
+            <!-- </div> -->
+            <!-- </section> -->
+            <h2 class="operation-title">
+              <span class="operation-summary">Returns object with balances and allowances</span>
+            </h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="swagger-operation-path">
+                  <span class="operation-method">GET</span>
+                  <span class="operation-path">/wallet/balance</span>
+                </section>
+              </div>
+            </div>
+            <div class="doc-row">
+              <div class="doc-copy"> </div>
+              <div class="doc-examples"></div>
+            </div>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="swagger-responses">
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">200 OK</div>
+                      <div class="prop-ref">
+                        <span class="">
+                          <a class="json-schema-ref" href="#/definitions/GetWalletBalanceResponse">GetWalletBalanceResponse</a>
+                        </span>
+                      </div>
+                      <!-- <span class="swagger-global"></span> <span class="json-schema-reference"><a href=""></a></span> -->
+                    </div>
+                    <div class="prop-value">
+                      <p>Ok</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">401 Unauthorized</div>
+                    </div>
+                    <div class="prop-value">
+                      <p>Unauthorized</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">403 Forbidden</div>
+                    </div>
+                    <div class="prop-value">
+                      <p>Forbidden</p>
+                    </div>
+                  </div>
+                </section>
+              </div>
+              <div class="doc-examples">
+                <section>
+                  <h5>Response Example
+                    <span>(200 OK)</span>
+                  </h5>
+                  <!-- <div class="hljs"> -->
+                  <html>
+                  <head></head>
+                  <body><pre><code class="hljs language-json">{
+  <span class="hljs-attr">&quot;eth&quot;</span>: <span class="hljs-string">&quot;number&quot;</span>,
+  <span class="hljs-attr">&quot;tokens&quot;</span>: [
+    {
+      <span class="hljs-attr">&quot;title&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;balance&quot;</span>: <span class="hljs-string">&quot;number&quot;</span>,
+      <span class="hljs-attr">&quot;allowance&quot;</span>: <span class="hljs-string">&quot;number&quot;</span>
+    }
+  ]
+}
+</code></pre> </body>
+                  </html>
+                  <!-- </div> -->
+                </section>
+              </div>
+            </div>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="swagger-request-security">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th class="swagger-request-security-schema"></th>
+                        <th class="swagger-request-security-scopes"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <a href="#security-definition-AccessToken">AccessToken</a>
+                        </td>
+                        <td> </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </section>
+              </div>
+            </div>
+          </div>
+          <h1 id="tag-Orders" class="swagger-summary-tag" data-traverse-target="tag-Orders">Orders</h1>
+          <div id="operation--orders-form-post" class="operation panel" data-traverse-target="operation--orders-form-post">
+            <!-- <section class="operation-tags row"> -->
+            <!-- <div class="doc-copy"> -->
+            <div class="operation-tags">
+              <a class="label" href="#tag-Orders">Orders</a>
+              <!---->
+            </div>
+            <!-- </div> -->
+            <!-- </section> -->
+            <h2 class="operation-title">
+              <span class="operation-summary">Forms blockchain order to sign</span>
+            </h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="swagger-operation-path">
+                  <span class="operation-method">POST</span>
+                  <span class="operation-path">/orders/form</span>
+                </section>
+              </div>
+            </div>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="swagger-request-body">
+                  <div class="prop-row">
+                    <div class="prop-name">
+                      <div class="swagger-request-model">
+                        <span class="">
+                          <a class="json-schema-ref" href="#/definitions/PostOrdersFormRequestBody">PostOrdersFormRequestBody</a>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="prop-value columns small-6">
+                      <!-- <div class="swagger-request-description"> -->
+                      <p>undefined</p>
+                      <!-- </div> -->
+                    </div>
+                  </div>
+                </section>
+              </div>
+              <div class="doc-examples">
+                <section>
+                  <h5>Request Example</h5>
+                  <!-- <div class="hljs"> -->
+                  <html>
+                  <head></head>
+                  <body><pre><code class="hljs language-json">{
+  <span class="hljs-attr">&quot;productId&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+  <span class="hljs-attr">&quot;pay&quot;</span>: {
+    <span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+    <span class="hljs-attr">&quot;rate&quot;</span>: <span class="hljs-string">&quot;number&quot;</span>
+  },
+  <span class="hljs-attr">&quot;receive&quot;</span>: {
+    <span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+    <span class="hljs-attr">&quot;rate&quot;</span>: <span class="hljs-string">&quot;number&quot;</span>
+  },
+  <span class="hljs-attr">&quot;nominal&quot;</span>: <span class="hljs-string">&quot;number&quot;</span>,
+  <span class="hljs-attr">&quot;maturity&quot;</span>: <span class="hljs-string">&quot;number&quot;</span>,
+  <span class="hljs-attr">&quot;partialFill&quot;</span>: <span class="hljs-string">&quot;boolean&quot;</span>
+}
+</code></pre> </body>
+                  </html>
+                  <!-- </div> -->
+                </section>
+              </div>
+            </div>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="swagger-responses">
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">200 OK</div>
+                      <div class="prop-ref">
+                        <span class="">
+                          <a class="json-schema-ref" href="#/definitions/PostOrdersFormResponseBody">PostOrdersFormResponseBody</a>
+                        </span>
+                      </div>
+                      <!-- <span class="swagger-global"></span> <span class="json-schema-reference"><a href=""></a></span> -->
+                    </div>
+                    <div class="prop-value">
+                      <p>OK</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">401 Unauthorized</div>
+                    </div>
+                    <div class="prop-value">
+                      <p>Unauthorized</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">403 Forbidden</div>
+                    </div>
+                    <div class="prop-value">
+                      <p>Forbidden</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">404 Not Found</div>
+                    </div>
+                    <div class="prop-value">
+                      <p>Not found</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">412 Precondition Failed</div>
+                    </div>
+                    <div class="prop-value">
+                      <p>Precondition Failed</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">422 Unprocessable Entity</div>
+                    </div>
+                    <div class="prop-value">
+                      <p>Unprocessable entity</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">429 Too Many Requests</div>
+                    </div>
+                    <div class="prop-value">
+                      <p>Too many requests</p>
+                    </div>
+                  </div>
+                </section>
+              </div>
+              <div class="doc-examples">
+                <section>
+                  <h5>Response Example
+                    <span>(200 OK)</span>
+                  </h5>
+                  <!-- <div class="hljs"> -->
+                  <html>
+                  <head></head>
+                  <body><pre><code class="hljs language-json">{
+  <span class="hljs-attr">&quot;formedOrderId&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+  <span class="hljs-attr">&quot;orderToSign&quot;</span>: {
+    <span class="hljs-attr">&quot;types&quot;</span>: {
+      <span class="hljs-attr">&quot;EIP712Domain&quot;</span>: [
+        {
+          <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+          <span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>
+        }
+      ],
+      <span class="hljs-attr">&quot;Order&quot;</span>: [
+        {
+          <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+          <span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>
+        }
+      ]
+    },
+    <span class="hljs-attr">&quot;primaryType&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+    <span class="hljs-attr">&quot;domain&quot;</span>: <span class="hljs-string">&quot;object&quot;</span>,
+    <span class="hljs-attr">&quot;message&quot;</span>: <span class="hljs-string">&quot;object&quot;</span>
+  }
+}
+</code></pre> </body>
+                  </html>
+                  <!-- </div> -->
+                </section>
+              </div>
+            </div>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="swagger-request-security">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th class="swagger-request-security-schema"></th>
+                        <th class="swagger-request-security-scopes"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <a href="#security-definition-AccessToken">AccessToken</a>
+                        </td>
+                        <td> </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </section>
+              </div>
+            </div>
+          </div>
+          <div id="operation--orders-sign-post" class="operation panel" data-traverse-target="operation--orders-sign-post">
+            <!-- <section class="operation-tags row"> -->
+            <!-- <div class="doc-copy"> -->
+            <div class="operation-tags">
+              <a class="label" href="#tag-Orders">Orders</a>
+              <!---->
+            </div>
+            <!-- </div> -->
+            <!-- </section> -->
+            <h2 class="operation-title">
+              <span class="operation-summary">Accepts signed order and pushes it to matching engine</span>
+            </h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="swagger-operation-path">
+                  <span class="operation-method">POST</span>
+                  <span class="operation-path">/orders/sign</span>
+                </section>
+              </div>
+            </div>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="swagger-request-body">
+                  <div class="prop-row">
+                    <div class="prop-name">
+                      <div class="swagger-request-model">
+                        <span class="">
+                          <a class="json-schema-ref" href="#/definitions/PostOrdersSignRequestBody">PostOrdersSignRequestBody</a>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="prop-value columns small-6">
+                      <!-- <div class="swagger-request-description"> -->
+                      <p>undefined</p>
+                      <!-- </div> -->
+                    </div>
+                  </div>
+                </section>
+              </div>
+              <div class="doc-examples">
+                <section>
+                  <h5>Request Example</h5>
+                  <!-- <div class="hljs"> -->
+                  <html>
+                  <head></head>
+                  <body><pre><code class="hljs language-json">{
+  <span class="hljs-attr">&quot;formedOrderId&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+  <span class="hljs-attr">&quot;signature&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>
+}
+</code></pre> </body>
+                  </html>
+                  <!-- </div> -->
+                </section>
+              </div>
+            </div>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="swagger-responses">
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">201 Created</div>
+                      <div class="prop-ref">
+                        <span class="">
+                          <a class="json-schema-ref" href="#/definitions/PostOrdersSignResponseBody">PostOrdersSignResponseBody</a>
+                        </span>
+                      </div>
+                      <!-- <span class="swagger-global"></span> <span class="json-schema-reference"><a href=""></a></span> -->
+                    </div>
+                    <div class="prop-value">
+                      <p>Created</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">401 Unauthorized</div>
+                    </div>
+                    <div class="prop-value">
+                      <p>Unauthorized</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">403 Forbidden</div>
+                    </div>
+                    <div class="prop-value">
+                      <p>Forbidden</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">404 Not Found</div>
+                    </div>
+                    <div class="prop-value">
+                      <p>Not found</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">409 Conflict</div>
+                    </div>
+                    <div class="prop-value">
+                      <p>Conflict</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">412 Precondition Failed</div>
+                    </div>
+                    <div class="prop-value">
+                      <p>Precondition Failed</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">422 Unprocessable Entity</div>
+                    </div>
+                    <div class="prop-value">
+                      <p>Unprocessable entity</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">429 Too Many Requests</div>
+                    </div>
+                    <div class="prop-value">
+                      <p>Too many requests</p>
+                    </div>
+                  </div>
+                </section>
+              </div>
+              <div class="doc-examples">
+                <section>
+                  <h5>Response Example
+                    <span>(201 Created)</span>
+                  </h5>
+                  <!-- <div class="hljs"> -->
+                  <html>
+                  <head></head>
+                  <body><pre><code class="hljs language-json">{
+  <span class="hljs-attr">&quot;orderId&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>
+}
+</code></pre> </body>
+                  </html>
+                  <!-- </div> -->
+                </section>
+              </div>
+            </div>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="swagger-request-security">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th class="swagger-request-security-schema"></th>
+                        <th class="swagger-request-security-scopes"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <a href="#security-definition-AccessToken">AccessToken</a>
+                        </td>
+                        <td> </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </section>
+              </div>
+            </div>
+          </div>
+          <div id="operation--orders-cancel-put" class="operation panel" data-traverse-target="operation--orders-cancel-put">
+            <!-- <section class="operation-tags row"> -->
+            <!-- <div class="doc-copy"> -->
+            <div class="operation-tags">
+              <a class="label" href="#tag-Orders">Orders</a>
+              <!---->
+            </div>
+            <!-- </div> -->
+            <!-- </section> -->
+            <h2 class="operation-title">
+              <span class="operation-summary">Cancels not filled orders</span>
+            </h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="swagger-operation-path">
+                  <span class="operation-method">PUT</span>
+                  <span class="operation-path">/orders/cancel</span>
+                </section>
+              </div>
+            </div>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="swagger-request-params">
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">orderIds:
+                        <span class="prop-type">
+                          <span class="json-property-type">string[]</span>
+                          <span class="json-property-range" title="Value limits"></span>
+                        </span>
+                      </div>
+                      <div class="prop-subtitle"> in query </div>
+                    </div>
+                    <div class="prop-value">
+                      <p>An array of order ids to cancel</p>
+                    </div>
+                  </div>
+                </section>
+              </div>
+              <div class="doc-examples"></div>
+            </div>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="swagger-responses">
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">202 Accepted</div>
+                    </div>
+                    <div class="prop-value">
+                      <p>Accepted</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">401 Unauthorized</div>
+                    </div>
+                    <div class="prop-value">
+                      <p>Unauthorized</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">403 Forbidden</div>
+                    </div>
+                    <div class="prop-value">
+                      <p>Forbidden</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">404 Not Found</div>
+                    </div>
+                    <div class="prop-value">
+                      <p>Not found</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">422 Unprocessable Entity</div>
+                    </div>
+                    <div class="prop-value">
+                      <p>Unprocessable entity</p>
+                    </div>
+                  </div>
+                </section>
+              </div>
+              <div class="doc-examples"> </div>
+            </div>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="swagger-request-security">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th class="swagger-request-security-schema"></th>
+                        <th class="swagger-request-security-scopes"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <a href="#security-definition-AccessToken">AccessToken</a>
+                        </td>
+                        <td> </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </section>
+              </div>
+            </div>
+          </div>
+          <h1>Schema Definitions</h1>
+          <div id="definition-GetAuthLoginDataResponse" class="definition panel" data-traverse-target="definition-GetAuthLoginDataResponse">
+            <h2 class="panel-title">
+              <a name="/definitions/GetAuthLoginDataResponse"></a>GetAuthLoginDataResponse: object
+              <!-- <span class="json-property-type"><span class="json-property-type">object</span>
+              <span class="json-property-range" title="Value limits"></span>
+              
+              
+              </span> -->
+            </h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="json-schema-properties">
+                  <dl>
+                    <dt data-property-name="ttl">
+                      <span class="json-property-name">ttl:</span>
+                      <span class="json-property-type">number</span>
+                      <span class="json-property-range" title="Value limits"></span>
+                    </dt>
+                    <dt data-property-name="data">
+                      <span class="json-property-name">data:</span>
+                      <span class="json-property-type">object</span>
+                      <span class="json-property-range" title="Value limits"></span>
+                    </dt>
+                    <dt class="json-inner-schema">
+                      <section class="json-schema-properties">
+                        <dl>
+                          <dt data-property-name="types">
+                            <span class="json-property-name">types:</span>
+                            <span class="json-property-type">object</span>
+                            <span class="json-property-range" title="Value limits"></span>
+                          </dt>
+                          <dt class="json-inner-schema">
+                            <section class="json-schema-properties">
+                              <dl>
+                                <dt data-property-name="EIP712Domain">
+                                  <span class="json-property-name">EIP712Domain:</span>
+                                  <span class="json-property-type">object[]</span>
+                                  <span class="json-property-range" title="Value limits"></span>
+                                </dt>
+                                <dt class="json-inner-schema">
+                                  <section class="json-schema-array-items">
+                                    <span class="json-property-type">object</span>
+                                    <span class="json-property-range" title="Value limits"></span>
+                                    <div class="json-inner-schema">
+                                      <section class="json-schema-properties">
+                                        <dl>
+                                          <dt data-property-name="name">
+                                            <span class="json-property-name">name:</span>
+                                            <span class="json-property-type">string</span>
+                                            <span class="json-property-range" title="Value limits"></span>
+                                          </dt>
+                                          <dt data-property-name="type">
+                                            <span class="json-property-name">type:</span>
+                                            <span class="json-property-type">string</span>
+                                            <span class="json-property-range" title="Value limits"></span>
+                                          </dt>
+                                        </dl>
+                                      </section>
+                                    </div>
+                                  </section>
+                                </dt>
+                                <dt data-property-name="Login">
+                                  <span class="json-property-name">Login:</span>
+                                  <span class="json-property-type">object[]</span>
+                                  <span class="json-property-range" title="Value limits"></span>
+                                </dt>
+                                <dt class="json-inner-schema">
+                                  <section class="json-schema-array-items">
+                                    <span class="json-property-type">object</span>
+                                    <span class="json-property-range" title="Value limits"></span>
+                                    <div class="json-inner-schema">
+                                      <section class="json-schema-properties">
+                                        <dl>
+                                          <dt data-property-name="name">
+                                            <span class="json-property-name">name:</span>
+                                            <span class="json-property-type">string</span>
+                                            <span class="json-property-range" title="Value limits"></span>
+                                          </dt>
+                                          <dt data-property-name="type">
+                                            <span class="json-property-name">type:</span>
+                                            <span class="json-property-type">string</span>
+                                            <span class="json-property-range" title="Value limits"></span>
+                                          </dt>
+                                        </dl>
+                                      </section>
+                                    </div>
+                                  </section>
+                                </dt>
+                              </dl>
+                            </section>
+                          </dt>
+                          <dt data-property-name="primaryType">
+                            <span class="json-property-name">primaryType:</span>
+                            <span class="json-property-type">string</span>
+                            <span class="json-property-range" title="Value limits"></span>
+                          </dt>
+                          <dt data-property-name="domain">
+                            <span class="json-property-name">domain:</span>
+                            <span class="json-property-type">object</span>
+                            <span class="json-property-range" title="Value limits"></span>
+                          </dt>
+                          <dt data-property-name="message">
+                            <span class="json-property-name">message:</span>
+                            <span class="json-property-type">object</span>
+                            <span class="json-property-range" title="Value limits"></span>
+                          </dt>
+                        </dl>
+                      </section>
+                    </dt>
+                  </dl>
+                </section>
+              </div>
+              <div class="doc-examples">
+                <section>
+                  <h5>Example</h5>
+                  <!-- <div class="hljs"> -->
+                  <html>
+                  <head></head>
+                  <body><pre><code class="hljs language-json">{
+  <span class="hljs-attr">&quot;ttl&quot;</span>: <span class="hljs-string">&quot;number&quot;</span>,
+  <span class="hljs-attr">&quot;data&quot;</span>: {
+    <span class="hljs-attr">&quot;types&quot;</span>: {
+      <span class="hljs-attr">&quot;EIP712Domain&quot;</span>: [
+        {
+          <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+          <span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>
+        }
+      ],
+      <span class="hljs-attr">&quot;Login&quot;</span>: [
+        {
+          <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+          <span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>
+        }
+      ]
+    },
+    <span class="hljs-attr">&quot;primaryType&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+    <span class="hljs-attr">&quot;domain&quot;</span>: <span class="hljs-string">&quot;object&quot;</span>,
+    <span class="hljs-attr">&quot;message&quot;</span>: <span class="hljs-string">&quot;object&quot;</span>
+  }
+}
+</code></pre> </body>
+                  </html>
+                  <!-- </div> -->
+                </section>
+              </div>
+            </div>
+          </div>
+          <div id="definition-GetProductsResponse" class="definition panel" data-traverse-target="definition-GetProductsResponse">
+            <h2 class="panel-title">
+              <a name="/definitions/GetProductsResponse"></a>GetProductsResponse: array
+              <!-- <span class="json-property-type"><span class="json-property-type">object[]</span>
+              <span class="json-property-range" title="Value limits"></span>
+              
+              
+              </span> -->
+            </h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="json-schema-array-items">
+                  <span class="json-property-type">object</span>
+                  <span class="json-property-range" title="Value limits"></span>
+                  <div class="json-inner-schema">
+                    <section class="json-schema-properties">
+                      <dl>
+                        <dt data-property-name="productId">
+                          <span class="json-property-name">productId:</span>
+                          <span class="json-property-type">string</span>
+                          <span class="json-property-range" title="Value limits"></span>
+                        </dt>
+                        <dt data-property-name="title">
+                          <span class="json-property-name">title:</span>
+                          <span class="json-property-type">string</span>
+                          <span class="json-property-range" title="Value limits"></span>
+                        </dt>
+                        <dt data-property-name="token">
+                          <span class="json-property-name">token:</span>
+                          <span class="json-property-type">string</span>
+                          <span class="json-property-range" title="Value limits"></span>
+                        </dt>
+                      </dl>
+                    </section>
+                  </div>
+                </section>
+              </div>
+              <div class="doc-examples">
+                <section>
+                  <h5>Example</h5>
+                  <!-- <div class="hljs"> -->
+                  <html>
+                  <head></head>
+                  <body><pre><code class="hljs language-json">[
+  {
+    <span class="hljs-attr">&quot;productId&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+    <span class="hljs-attr">&quot;title&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+    <span class="hljs-attr">&quot;token&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>
+  }
+]
+</code></pre> </body>
+                  </html>
+                  <!-- </div> -->
+                </section>
+              </div>
+            </div>
+          </div>
+          <div id="definition-GetMetaConfigResponse" class="definition panel" data-traverse-target="definition-GetMetaConfigResponse">
+            <h2 class="panel-title">
+              <a name="/definitions/GetMetaConfigResponse"></a>GetMetaConfigResponse: object
+              <!-- <span class="json-property-type"><span class="json-property-type">object</span>
+              <span class="json-property-range" title="Value limits"></span>
+              
+              
+              </span> -->
+            </h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="json-schema-properties">
+                  <dl>
+                    <dt data-property-name="networkId">
+                      <span class="json-property-name">networkId:</span>
+                      <span class="json-property-type">number</span>
+                      <span class="json-property-range" title="Value limits"></span>
+                    </dt>
+                    <dt data-property-name="defaults">
+                      <span class="json-property-name">defaults:</span>
+                      <span class="json-property-type">object</span>
+                      <span class="json-property-range" title="Value limits"></span>
+                    </dt>
+                    <dt class="json-inner-schema">
+                      <section class="json-schema-properties">
+                        <dl>
+                          <dt data-property-name="productId">
+                            <span class="json-property-name">productId:</span>
+                            <span class="json-property-type">string</span>
+                            <span class="json-property-range" title="Value limits"></span>
+                          </dt>
+                        </dl>
+                      </section>
+                    </dt>
+                    <dt data-property-name="supportedTokens">
+                      <span class="json-property-name">supportedTokens:</span>
+                      <span class="json-property-type">object[]</span>
+                      <span class="json-property-range" title="Value limits"></span>
+                    </dt>
+                    <dt class="json-inner-schema">
+                      <section class="json-schema-array-items">
+                        <span class="json-property-type">object</span>
+                        <span class="json-property-range" title="Value limits"></span>
+                        <div class="json-inner-schema">
+                          <section class="json-schema-properties">
+                            <dl>
+                              <dt data-property-name="title">
+                                <span class="json-property-name">title:</span>
+                                <span class="json-property-type">string</span>
+                                <span class="json-property-range" title="Value limits"></span>
+                              </dt>
+                              <dt data-property-name="address">
+                                <span class="json-property-name">address:</span>
+                                <span class="json-property-type">string</span>
+                                <span class="json-property-range" title="Value limits"></span>
+                              </dt>
+                              <dt data-property-name="decimals">
+                                <span class="json-property-name">decimals:</span>
+                                <span class="json-property-type">number</span>
+                                <span class="json-property-range" title="Value limits"></span>
+                              </dt>
+                            </dl>
+                          </section>
+                        </div>
+                      </section>
+                    </dt>
+                    <dt data-property-name="opiumContracts">
+                      <span class="json-property-name">opiumContracts:</span>
+                      <span class="json-property-type">object</span>
+                      <span class="json-property-range" title="Value limits"></span>
+                    </dt>
+                    <dt class="json-inner-schema">
+                      <section class="json-schema-properties">
+                        <dl>
+                          <dt data-property-name="TokenSpender">
+                            <span class="json-property-name">TokenSpender:</span>
+                            <span class="json-property-type">string</span>
+                            <span class="json-property-range" title="Value limits"></span>
+                          </dt>
+                        </dl>
+                      </section>
+                    </dt>
+                    <dt data-property-name="supportedMaturities">
+                      <span class="json-property-name">supportedMaturities:</span>
+                      <span class="json-property-type">number[]</span>
+                      <span class="json-property-range" title="Value limits"></span>
+                    </dt>
+                    <dt class="json-inner-schema">
+                      <section class="json-schema-array-items">
+                        <span class="json-property-type">number</span>
+                        <span class="json-property-range" title="Value limits"></span>
+                        <div class="json-inner-schema">
+                          <section class="json-schema-description">
+                            <p>UNIX timestamp of supported maturities in seconds</p>
+                          </section>
+                        </div>
+                      </section>
+                    </dt>
+                  </dl>
+                </section>
+              </div>
+              <div class="doc-examples">
+                <section>
+                  <h5>Example</h5>
+                  <!-- <div class="hljs"> -->
+                  <html>
+                  <head></head>
+                  <body><pre><code class="hljs language-json">{
+  <span class="hljs-attr">&quot;networkId&quot;</span>: <span class="hljs-string">&quot;number&quot;</span>,
+  <span class="hljs-attr">&quot;defaults&quot;</span>: {
+    <span class="hljs-attr">&quot;productId&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>
+  },
+  <span class="hljs-attr">&quot;supportedTokens&quot;</span>: [
+    {
+      <span class="hljs-attr">&quot;title&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;address&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;decimals&quot;</span>: <span class="hljs-string">&quot;number&quot;</span>
+    }
+  ],
+  <span class="hljs-attr">&quot;opiumContracts&quot;</span>: {
+    <span class="hljs-attr">&quot;TokenSpender&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>
+  },
+  <span class="hljs-attr">&quot;supportedMaturities&quot;</span>: [
+    <span class="hljs-string">&quot;number&quot;</span>
+  ]
+}
+</code></pre> </body>
+                  </html>
+                  <!-- </div> -->
+                </section>
+              </div>
+            </div>
+          </div>
+          <div id="definition-PostOrdersFormRequestBody" class="definition panel" data-traverse-target="definition-PostOrdersFormRequestBody">
+            <h2 class="panel-title">
+              <a name="/definitions/PostOrdersFormRequestBody"></a>PostOrdersFormRequestBody: object
+              <!-- <span class="json-property-type"><span class="json-property-type">object</span>
+              <span class="json-property-range" title="Value limits"></span>
+              
+              
+              </span> -->
+            </h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="json-schema-properties">
+                  <dl>
+                    <dt data-property-name="productId">
+                      <span class="json-property-name">productId:</span>
+                      <span class="json-property-type">string</span>
+                      <span class="json-property-range" title="Value limits"></span>
+                    </dt>
+                    <dt data-property-name="pay">
+                      <span class="json-property-name">pay:</span>
+                      <span class="json-property-type">object</span>
+                      <span class="json-property-range" title="Value limits"></span>
+                    </dt>
+                    <dt class="json-inner-schema">
+                      <section class="json-schema-properties">
+                        <dl>
+                          <dt data-property-name="type" class="has-description">
+                            <span class="json-property-name">type:</span>
+                            <span class="json-property-type">string</span>
+                            <span class="json-property-enum" title="Possible values">
+                              <span class="json-property-enum-item">FIXED</span>,
+                              <span class="json-property-enum-item">FLOATING</span>
+                            </span>
+                            <span class="json-property-range" title="Value limits"></span>
+                          </dt>
+                          <dd>
+                            <p><code>pay.type</code> and <code>receive.type</code> are mutually exclusive</p>
+                          </dd>
+                          <dt data-property-name="rate" class="has-description">
+                            <span class="json-property-name">rate:</span>
+                            <span class="json-property-type">number</span>
+                            <span class="json-property-range" title="Value limits"></span>
+                          </dt>
+                          <dd>
+                            <p>Only considered if <code>type = FIXED</code></p>
+                          </dd>
+                        </dl>
+                      </section>
+                    </dt>
+                    <dt data-property-name="receive">
+                      <span class="json-property-name">receive:</span>
+                      <span class="json-property-type">object</span>
+                      <span class="json-property-range" title="Value limits"></span>
+                    </dt>
+                    <dt class="json-inner-schema">
+                      <section class="json-schema-properties">
+                        <dl>
+                          <dt data-property-name="type" class="has-description">
+                            <span class="json-property-name">type:</span>
+                            <span class="json-property-type">string</span>
+                            <span class="json-property-enum" title="Possible values">
+                              <span class="json-property-enum-item">FIXED</span>,
+                              <span class="json-property-enum-item">FLOATING</span>
+                            </span>
+                            <span class="json-property-range" title="Value limits"></span>
+                          </dt>
+                          <dd>
+                            <p><code>pay.type</code> and <code>receive.type</code> are mutually exclusive</p>
+                          </dd>
+                          <dt data-property-name="rate" class="has-description">
+                            <span class="json-property-name">rate:</span>
+                            <span class="json-property-type">number</span>
+                            <span class="json-property-range" title="Value limits"></span>
+                          </dt>
+                          <dd>
+                            <p>Only considered if <code>type = FIXED</code></p>
+                          </dd>
+                        </dl>
+                      </section>
+                    </dt>
+                    <dt data-property-name="nominal">
+                      <span class="json-property-name">nominal:</span>
+                      <span class="json-property-type">number</span>
+                      <span class="json-property-range" title="Value limits"></span>
+                    </dt>
+                    <dt data-property-name="maturity" class="has-description">
+                      <span class="json-property-name">maturity:</span>
+                      <span class="json-property-type">number</span>
+                      <span class="json-property-range" title="Value limits"></span>
+                    </dt>
+                    <dd>
+                      <p>UNIX timestamp of one of supported maturities in seconds</p>
+                    </dd>
+                    <dt data-property-name="partialFill">
+                      <span class="json-property-name">partialFill:</span>
+                      <span class="json-property-type">boolean</span>
+                      <span class="json-property-range" title="Value limits"></span>
+                    </dt>
+                  </dl>
+                </section>
+              </div>
+              <div class="doc-examples">
+                <section>
+                  <h5>Example</h5>
+                  <!-- <div class="hljs"> -->
+                  <html>
+                  <head></head>
+                  <body><pre><code class="hljs language-json">{
+  <span class="hljs-attr">&quot;productId&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+  <span class="hljs-attr">&quot;pay&quot;</span>: {
+    <span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+    <span class="hljs-attr">&quot;rate&quot;</span>: <span class="hljs-string">&quot;number&quot;</span>
+  },
+  <span class="hljs-attr">&quot;receive&quot;</span>: {
+    <span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+    <span class="hljs-attr">&quot;rate&quot;</span>: <span class="hljs-string">&quot;number&quot;</span>
+  },
+  <span class="hljs-attr">&quot;nominal&quot;</span>: <span class="hljs-string">&quot;number&quot;</span>,
+  <span class="hljs-attr">&quot;maturity&quot;</span>: <span class="hljs-string">&quot;number&quot;</span>,
+  <span class="hljs-attr">&quot;partialFill&quot;</span>: <span class="hljs-string">&quot;boolean&quot;</span>
+}
+</code></pre> </body>
+                  </html>
+                  <!-- </div> -->
+                </section>
+              </div>
+            </div>
+          </div>
+          <div id="definition-PostOrdersFormResponseBody" class="definition panel" data-traverse-target="definition-PostOrdersFormResponseBody">
+            <h2 class="panel-title">
+              <a name="/definitions/PostOrdersFormResponseBody"></a>PostOrdersFormResponseBody: object
+              <!-- <span class="json-property-type"><span class="json-property-type">object</span>
+              <span class="json-property-range" title="Value limits"></span>
+              
+              
+              </span> -->
+            </h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="json-schema-properties">
+                  <dl>
+                    <dt data-property-name="formedOrderId">
+                      <span class="json-property-name">formedOrderId:</span>
+                      <span class="json-property-type">string</span>
+                      <span class="json-property-range" title="Value limits"></span>
+                    </dt>
+                    <dt data-property-name="orderToSign">
+                      <span class="json-property-name">orderToSign:</span>
+                      <span class="json-property-type">object</span>
+                      <span class="json-property-range" title="Value limits"></span>
+                    </dt>
+                    <dt class="json-inner-schema">
+                      <section class="json-schema-properties">
+                        <dl>
+                          <dt data-property-name="types">
+                            <span class="json-property-name">types:</span>
+                            <span class="json-property-type">object</span>
+                            <span class="json-property-range" title="Value limits"></span>
+                          </dt>
+                          <dt class="json-inner-schema">
+                            <section class="json-schema-properties">
+                              <dl>
+                                <dt data-property-name="EIP712Domain">
+                                  <span class="json-property-name">EIP712Domain:</span>
+                                  <span class="json-property-type">object[]</span>
+                                  <span class="json-property-range" title="Value limits"></span>
+                                </dt>
+                                <dt class="json-inner-schema">
+                                  <section class="json-schema-array-items">
+                                    <span class="json-property-type">object</span>
+                                    <span class="json-property-range" title="Value limits"></span>
+                                    <div class="json-inner-schema">
+                                      <section class="json-schema-properties">
+                                        <dl>
+                                          <dt data-property-name="name">
+                                            <span class="json-property-name">name:</span>
+                                            <span class="json-property-type">string</span>
+                                            <span class="json-property-range" title="Value limits"></span>
+                                          </dt>
+                                          <dt data-property-name="type">
+                                            <span class="json-property-name">type:</span>
+                                            <span class="json-property-type">string</span>
+                                            <span class="json-property-range" title="Value limits"></span>
+                                          </dt>
+                                        </dl>
+                                      </section>
+                                    </div>
+                                  </section>
+                                </dt>
+                                <dt data-property-name="Order">
+                                  <span class="json-property-name">Order:</span>
+                                  <span class="json-property-type">object[]</span>
+                                  <span class="json-property-range" title="Value limits"></span>
+                                </dt>
+                                <dt class="json-inner-schema">
+                                  <section class="json-schema-array-items">
+                                    <span class="json-property-type">object</span>
+                                    <span class="json-property-range" title="Value limits"></span>
+                                    <div class="json-inner-schema">
+                                      <section class="json-schema-properties">
+                                        <dl>
+                                          <dt data-property-name="name">
+                                            <span class="json-property-name">name:</span>
+                                            <span class="json-property-type">string</span>
+                                            <span class="json-property-range" title="Value limits"></span>
+                                          </dt>
+                                          <dt data-property-name="type">
+                                            <span class="json-property-name">type:</span>
+                                            <span class="json-property-type">string</span>
+                                            <span class="json-property-range" title="Value limits"></span>
+                                          </dt>
+                                        </dl>
+                                      </section>
+                                    </div>
+                                  </section>
+                                </dt>
+                              </dl>
+                            </section>
+                          </dt>
+                          <dt data-property-name="primaryType">
+                            <span class="json-property-name">primaryType:</span>
+                            <span class="json-property-type">string</span>
+                            <span class="json-property-range" title="Value limits"></span>
+                          </dt>
+                          <dt data-property-name="domain">
+                            <span class="json-property-name">domain:</span>
+                            <span class="json-property-type">object</span>
+                            <span class="json-property-range" title="Value limits"></span>
+                          </dt>
+                          <dt data-property-name="message">
+                            <span class="json-property-name">message:</span>
+                            <span class="json-property-type">object</span>
+                            <span class="json-property-range" title="Value limits"></span>
+                          </dt>
+                        </dl>
+                      </section>
+                    </dt>
+                  </dl>
+                </section>
+              </div>
+              <div class="doc-examples">
+                <section>
+                  <h5>Example</h5>
+                  <!-- <div class="hljs"> -->
+                  <html>
+                  <head></head>
+                  <body><pre><code class="hljs language-json">{
+  <span class="hljs-attr">&quot;formedOrderId&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+  <span class="hljs-attr">&quot;orderToSign&quot;</span>: {
+    <span class="hljs-attr">&quot;types&quot;</span>: {
+      <span class="hljs-attr">&quot;EIP712Domain&quot;</span>: [
+        {
+          <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+          <span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>
+        }
+      ],
+      <span class="hljs-attr">&quot;Order&quot;</span>: [
+        {
+          <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+          <span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>
+        }
+      ]
+    },
+    <span class="hljs-attr">&quot;primaryType&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+    <span class="hljs-attr">&quot;domain&quot;</span>: <span class="hljs-string">&quot;object&quot;</span>,
+    <span class="hljs-attr">&quot;message&quot;</span>: <span class="hljs-string">&quot;object&quot;</span>
+  }
+}
+</code></pre> </body>
+                  </html>
+                  <!-- </div> -->
+                </section>
+              </div>
+            </div>
+          </div>
+          <div id="definition-PostOrdersSignRequestBody" class="definition panel" data-traverse-target="definition-PostOrdersSignRequestBody">
+            <h2 class="panel-title">
+              <a name="/definitions/PostOrdersSignRequestBody"></a>PostOrdersSignRequestBody: object
+              <!-- <span class="json-property-type"><span class="json-property-type">object</span>
+              <span class="json-property-range" title="Value limits"></span>
+              
+              
+              </span> -->
+            </h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="json-schema-properties">
+                  <dl>
+                    <dt data-property-name="formedOrderId">
+                      <span class="json-property-name">formedOrderId:</span>
+                      <span class="json-property-type">string</span>
+                      <span class="json-property-range" title="Value limits"></span>
+                    </dt>
+                    <dt data-property-name="signature">
+                      <span class="json-property-name">signature:</span>
+                      <span class="json-property-type">string</span>
+                      <span class="json-property-range" title="Value limits"></span>
+                    </dt>
+                  </dl>
+                </section>
+              </div>
+              <div class="doc-examples">
+                <section>
+                  <h5>Example</h5>
+                  <!-- <div class="hljs"> -->
+                  <html>
+                  <head></head>
+                  <body><pre><code class="hljs language-json">{
+  <span class="hljs-attr">&quot;formedOrderId&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+  <span class="hljs-attr">&quot;signature&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>
+}
+</code></pre> </body>
+                  </html>
+                  <!-- </div> -->
+                </section>
+              </div>
+            </div>
+          </div>
+          <div id="definition-PostOrdersSignResponseBody" class="definition panel" data-traverse-target="definition-PostOrdersSignResponseBody">
+            <h2 class="panel-title">
+              <a name="/definitions/PostOrdersSignResponseBody"></a>PostOrdersSignResponseBody: object
+              <!-- <span class="json-property-type"><span class="json-property-type">object</span>
+              <span class="json-property-range" title="Value limits"></span>
+              
+              
+              </span> -->
+            </h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="json-schema-properties">
+                  <dl>
+                    <dt data-property-name="orderId">
+                      <span class="json-property-name">orderId:</span>
+                      <span class="json-property-type">string</span>
+                      <span class="json-property-range" title="Value limits"></span>
+                    </dt>
+                  </dl>
+                </section>
+              </div>
+              <div class="doc-examples">
+                <section>
+                  <h5>Example</h5>
+                  <!-- <div class="hljs"> -->
+                  <html>
+                  <head></head>
+                  <body><pre><code class="hljs language-json">{
+  <span class="hljs-attr">&quot;orderId&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>
+}
+</code></pre> </body>
+                  </html>
+                  <!-- </div> -->
+                </section>
+              </div>
+            </div>
+          </div>
+          <div id="definition-GetWalletBalanceResponse" class="definition panel" data-traverse-target="definition-GetWalletBalanceResponse">
+            <h2 class="panel-title">
+              <a name="/definitions/GetWalletBalanceResponse"></a>GetWalletBalanceResponse: object
+              <!-- <span class="json-property-type"><span class="json-property-type">object</span>
+              <span class="json-property-range" title="Value limits"></span>
+              
+              
+              </span> -->
+            </h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="json-schema-properties">
+                  <dl>
+                    <dt data-property-name="eth">
+                      <span class="json-property-name">eth:</span>
+                      <span class="json-property-type">number</span>
+                      <span class="json-property-range" title="Value limits"></span>
+                    </dt>
+                    <dt data-property-name="tokens">
+                      <span class="json-property-name">tokens:</span>
+                      <span class="json-property-type">object[]</span>
+                      <span class="json-property-range" title="Value limits"></span>
+                    </dt>
+                    <dt class="json-inner-schema">
+                      <section class="json-schema-array-items">
+                        <span class="json-property-type">object</span>
+                        <span class="json-property-range" title="Value limits"></span>
+                        <div class="json-inner-schema">
+                          <section class="json-schema-properties">
+                            <dl>
+                              <dt data-property-name="title">
+                                <span class="json-property-name">title:</span>
+                                <span class="json-property-type">string</span>
+                                <span class="json-property-range" title="Value limits"></span>
+                              </dt>
+                              <dt data-property-name="balance">
+                                <span class="json-property-name">balance:</span>
+                                <span class="json-property-type">number</span>
+                                <span class="json-property-range" title="Value limits"></span>
+                              </dt>
+                              <dt data-property-name="allowance">
+                                <span class="json-property-name">allowance:</span>
+                                <span class="json-property-type">number</span>
+                                <span class="json-property-range" title="Value limits"></span>
+                              </dt>
+                            </dl>
+                          </section>
+                        </div>
+                      </section>
+                    </dt>
+                  </dl>
+                </section>
+              </div>
+              <div class="doc-examples">
+                <section>
+                  <h5>Example</h5>
+                  <!-- <div class="hljs"> -->
+                  <html>
+                  <head></head>
+                  <body><pre><code class="hljs language-json">{
+  <span class="hljs-attr">&quot;eth&quot;</span>: <span class="hljs-string">&quot;number&quot;</span>,
+  <span class="hljs-attr">&quot;tokens&quot;</span>: [
+    {
+      <span class="hljs-attr">&quot;title&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;balance&quot;</span>: <span class="hljs-string">&quot;number&quot;</span>,
+      <span class="hljs-attr">&quot;allowance&quot;</span>: <span class="hljs-string">&quot;number&quot;</span>
+    }
+  ]
+}
+</code></pre> </body>
+                  </html>
+                  <!-- </div> -->
+                </section>
+              </div>
+            </div>
+          </div>
+          <div id="definition-OrderQuoteResponseBody" class="definition panel" data-traverse-target="definition-OrderQuoteResponseBody">
+            <h2 class="panel-title">
+              <a name="/definitions/OrderQuoteResponseBody"></a>OrderQuoteResponseBody: object
+              <!-- <span class="json-property-type"><span class="json-property-type">object</span>
+              <span class="json-property-range" title="Value limits"></span>
+              
+              
+              </span> -->
+            </h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="json-schema-properties">
+                  <dl>
+                    <dt data-property-name="fixedRate" class="has-description">
+                      <span class="json-property-name">fixedRate:</span>
+                      <span class="json-property-type">number</span>
+                      <span class="json-property-range" title="Value limits"></span>
+                    </dt>
+                    <dd>
+                      <p>Necessary for instant match fixedRate</p>
+                    </dd>
+                  </dl>
+                </section>
+              </div>
+              <div class="doc-examples">
+                <section>
+                  <h5>Example</h5>
+                  <!-- <div class="hljs"> -->
+                  <html>
+                  <head></head>
+                  <body><pre><code class="hljs language-json">{
+  <span class="hljs-attr">&quot;fixedRate&quot;</span>: <span class="hljs-string">&quot;number&quot;</span>
+}
+</code></pre> </body>
+                  </html>
+                  <!-- </div> -->
+                </section>
+              </div>
+            </div>
+          </div>
+          <div class="doc-row no-margin">
+            <div class="doc-copy doc-separator">
+              <a class="powered-by" href="https://sourcey.com/spectacle">Documentation by
+                <span>Spectacle</span>
+              </a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </body>
+</html>
