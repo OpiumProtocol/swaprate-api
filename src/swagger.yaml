@@ -311,6 +311,10 @@ definitions:
         description: UNIX timestamp of one of supported maturities in seconds
       partialFill:
         type: boolean
+      aggregate:
+        type: string
+        default: 'NONE'
+        enum: ['NONE', 'FIXED_RATE_COMPOUND']
   PostOrdersFormResponseBody:
     type: object
     properties:
