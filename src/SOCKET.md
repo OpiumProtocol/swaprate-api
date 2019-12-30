@@ -2,7 +2,7 @@
 
 ## Version
 
-v1.1.3
+v1.1.4
 
 Use `socket.io` namespace `v1`
 
@@ -281,11 +281,13 @@ Requires authentication to build subscription message.
       type: string, // FIXED, FLOATING
       rate: number,
       description: string,
+      accInterest: number // Exists only of pay.type == FLOATING
     } | null,,
     receive: {
       type: string,
       rate: number,
       description: string,
+      accInterest: number // Exists only of receive.type == FLOATING
     } | null,
     nominal: number,
     token: string,
@@ -293,13 +295,11 @@ Requires authentication to build subscription message.
       productId: string,
       pay: {
         type: string, // FIXED, FLOATING
-        rate: number,
-        accInterest: number // Exists only of pay.type == FLOATING
+        rate: number
       }
       receive: {
         type: string,
-        rate: number,
-        accInterest: number // Exists only of receive.type == FLOATING
+        rate: number
       },
       nominal: number,
       maturity: number
@@ -318,10 +318,12 @@ Requires authentication to build subscription message.
 - - - `type` is an ENUM [`FIXED`, `FLOATING`] of type user pays
 - - - `rate` is rate user pays, in range from `0..1`
 - - - `description` is description for UI
+- - - `accInterest` is accumulated interest rate of Floating type
 - - `receive` is an object which shows what user receives, could be `null` if there are no data
 - - - `type` is an ENUM [`FIXED`, `FLOATING`] of type user receives
 - - - `rate` is rate user receives, in range from `0..1`
 - - - `description` is description for UI
+- - - `accInterest` is accumulated interest rate of Floating type
 - - `nominal` is nominal user has in the position
 - - `token` is an address of token of nominal
 - - `populate` is an object with data to populate on web, if user clicks on `SWAP NOW` button, could be `null` if there are no data to populate with
@@ -329,12 +331,10 @@ Requires authentication to build subscription message.
 - - - - `type` is an ENUM [`FIXED`, `FLOATING`] of type user wanted to pay
 - - - - `rate` is rate user wanted to pay, in range from `0..1`
 - - - - `description` is description for UI
-- - - - `accInterest` is accumulated interest rate of Floating type
 - - - `receive` is an object which shows what user wanted to receive
 - - - - `type` is an ENUM [`FIXED`, `FLOATING`] of type user wanted to receive
 - - - - `rate` is rate user wanted to receive, in range from `0..1`
 - - - - `description` is description for UI
-- - - - `accInterest` is accumulated interest rate of Floating type
 - - - `nominal` is nominal user wanted to cover
 - - - `maturity` is maturity UNIX timestamp in seconds
 
