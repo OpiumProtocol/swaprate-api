@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  version: '1.1.3'
+  version: '1.1.4'
   title: "SwapRate API"
   description: |-
     **Socket.io**
@@ -274,6 +274,7 @@ definitions:
     properties:
       productId:
         type: string
+        required: true
       pay:
         type: object
         properties:
@@ -284,6 +285,7 @@ definitions:
               - FLOATING
             description: |-
               `pay.type` and `receive.type` are mutually exclusive
+            required: true
           rate:
             type: number
             description: Only considered if `type = FIXED`
@@ -299,6 +301,7 @@ definitions:
               - FLOATING
             description: |-
               `pay.type` and `receive.type` are mutually exclusive
+            required: true
           rate:
             type: number
             description: Only considered if `type = FIXED`
@@ -306,15 +309,19 @@ definitions:
             max: 1
       nominal:
         type: number
+        required: true
       maturity:
         type: number
         description: UNIX timestamp of one of supported maturities in seconds
+        required: true
       partialFill:
         type: boolean
+        required: true
       aggregate:
         type: string
         default: 'NONE'
         enum: ['NONE', 'FIXED_RATE_COMPOUND']
+        required: false
   PostOrdersFormResponseBody:
     type: object
     properties:
