@@ -27,7 +27,7 @@
             <a href="#tag-Authentication">Authentication</a>
             <ul>
               <li>
-                <a href="#operation--auth-loginData-get"> Returns login message to sign and parameters </a>
+                <a href="#operation--auth-loginData-get"> Returns login parameters and login message to sign in &#x60;EIP712&#x60; format </a>
               </li>
             </ul>
           </section>
@@ -35,7 +35,7 @@
             <a href="#tag-Meta">Meta</a>
             <ul>
               <li>
-                <a href="#operation--meta-config-get"> Returns object with configuration </a>
+                <a href="#operation--meta-config-get"> Returns object with relayer configuration </a>
               </li>
             </ul>
           </section>
@@ -46,7 +46,7 @@
                 <a href="#operation--products-get"> Returns list of products currently available to trade </a>
               </li>
               <li>
-                <a href="#operation--products--productId--quote-get"> get the fixed rate of product that is possible with selected nominal </a>
+                <a href="#operation--products--productId--quote-get"> Returns the possible fixed rate settlement on product with required nominal and maturity </a>
               </li>
             </ul>
           </section>
@@ -54,7 +54,7 @@
             <a href="#tag-Wallet">Wallet</a>
             <ul>
               <li>
-                <a href="#operation--wallet-balance-get"> Returns object with balances and allowances </a>
+                <a href="#operation--wallet-balance-get"> Returns object with user&#x27;s token balances and allowances </a>
               </li>
             </ul>
           </section>
@@ -62,13 +62,13 @@
             <a href="#tag-Orders">Orders</a>
             <ul>
               <li>
-                <a href="#operation--orders-form-post"> Forms blockchain order to sign </a>
+                <a href="#operation--orders-form-post"> Forms blockchain order to be signed by user in &#x60;EIP712&#x60; format </a>
               </li>
               <li>
-                <a href="#operation--orders-sign-post"> Accepts signed order and pushes it to matching engine </a>
+                <a href="#operation--orders-sign-post"> Receives signed order and pushes it to matching engine </a>
               </li>
               <li>
-                <a href="#operation--orders-cancel-put"> Cancels not filled orders </a>
+                <a href="#operation--orders-cancel-put"> Cancels orders by specified ids </a>
               </li>
             </ul>
           </section>
@@ -97,15 +97,24 @@
             <div class="doc-row">
               <div class="doc-copy">
                 <p>
+                  <strong>Description</strong>
+                </p>
+                <p>Following specification describes the way to connect to
+                  <a href="https://swaprate.finance">swaprate.finance</a> relayer of
+                  <a href="https://opium.network">Opium Protocol</a> via REST API and Socket.io endpoint.</p>
+                <p>REST API allows to fetch login message for authentication, load currently supported products, tokens and maturities, user tokens balance and allowance state, form, sign and cancel orders, alongside with getting quotes for fixed rate deposit.</p>
+                <p>Socket.io endpoint allows to reactively receive updates on current orderbook status (charts). Also using access token it&#39;s possible to receive updates on statuses of user&#39;s orders, performed swaps and current active positions on third party platforms (e.g. Compound Finance).</p>
+                <p>
                   <strong>Socket.io</strong>
                 </p>
-                <p>There is also <code>socket.io</code> specification which could be found
+                <p><code>socket.io</code> specification which could be found
                   <a href="socket.html">here</a>
                 </p>
                 <p>
                   <strong>Authorization</strong>
                 </p>
-                <p><code>Access token</code> is <code>base64</code> encoded JSON with following structure</p> <pre><code class="hljs">{
+                <p>Some of the HTTP and Socket.io endpoints are protected (user-based), thus require to include access token within a request and connection.</p>
+                <p><code>Access token</code> is <code>base64</code> encoded JSON, which should be used as <code>Bearer</code> authorization token and have the following structure.</p> <pre><code class="hljs">{
 <span class="hljs-symbol">  ttl:</span> number, <span class="hljs-comment">// UNIX token expiration timestamp used in signature</span>
 <span class="hljs-symbol">  address:</span> string, <span class="hljs-comment">// User's public key</span>
 <span class="hljs-symbol">  signature:</span> string, <span class="hljs-comment">// Signature of login message</span>
@@ -116,6 +125,9 @@
                   <h5>API Endpoint</h5>
                   <!-- <div class="hljs"> --><pre><code>https://api.test.swaprate.finance/v1</code></pre>
                   <!-- </div> -->
+                  <h5>Contact:
+                    <a href="mailto:info@opium.team">info@opium.team</a>
+                  </h5>
                   <h5>Request Content-Types:
                     <span>application/json</span>
                   </h5>
@@ -178,7 +190,7 @@
             <!-- </div> -->
             <!-- </section> -->
             <h2 class="operation-title">
-              <span class="operation-summary">Returns login message to sign and parameters</span>
+              <span class="operation-summary">Returns login parameters and login message to sign in <code>EIP712</code> format</span>
             </h2>
             <div class="doc-row">
               <div class="doc-copy">
@@ -259,7 +271,7 @@
             <!-- </div> -->
             <!-- </section> -->
             <h2 class="operation-title">
-              <span class="operation-summary">Returns object with configuration</span>
+              <span class="operation-summary">Returns object with relayer configuration</span>
             </h2>
             <div class="doc-row">
               <div class="doc-copy">
@@ -402,7 +414,7 @@
             <!-- </div> -->
             <!-- </section> -->
             <h2 class="operation-title">
-              <span class="operation-summary">get the fixed rate of product that is possible with selected nominal</span>
+              <span class="operation-summary">Returns the possible fixed rate settlement on product with required nominal and maturity</span>
             </h2>
             <div class="doc-row">
               <div class="doc-copy">
@@ -536,7 +548,7 @@
             <!-- </div> -->
             <!-- </section> -->
             <h2 class="operation-title">
-              <span class="operation-summary">Returns object with balances and allowances</span>
+              <span class="operation-summary">Returns object with user&apos;s token balances and allowances</span>
             </h2>
             <div class="doc-row">
               <div class="doc-copy">
@@ -643,7 +655,7 @@
             <!-- </div> -->
             <!-- </section> -->
             <h2 class="operation-title">
-              <span class="operation-summary">Forms blockchain order to sign</span>
+              <span class="operation-summary">Forms blockchain order to be signed by user in <code>EIP712</code> format</span>
             </h2>
             <div class="doc-row">
               <div class="doc-copy">
@@ -835,7 +847,7 @@
             <!-- </div> -->
             <!-- </section> -->
             <h2 class="operation-title">
-              <span class="operation-summary">Accepts signed order and pushes it to matching engine</span>
+              <span class="operation-summary">Receives signed order and pushes it to matching engine</span>
             </h2>
             <div class="doc-row">
               <div class="doc-copy">
@@ -1005,7 +1017,7 @@
             <!-- </div> -->
             <!-- </section> -->
             <h2 class="operation-title">
-              <span class="operation-summary">Cancels not filled orders</span>
+              <span class="operation-summary">Cancels orders by specified ids</span>
             </h2>
             <div class="doc-row">
               <div class="doc-copy">
