@@ -3,13 +3,23 @@ info:
   version: '1.1.4'
   title: "SwapRate API"
   description: |-
+    **Description**
+
+    Following specification describes the way to connect to [swaprate.finance](https://swaprate.finance) relayer of [Opium Protocol](https://opium.network) via REST API and Socket.io endpoint.
+
+    REST API allows to fetch login message for authentication, load currently supported products, tokens and maturities, user tokens balance and allowance state, form, sign and cancel orders, alongside with getting quotes for fixed rate deposit.
+
+    Socket.io endpoint allows to reactively receive updates on current orderbook status (charts). Also using access token it's possible to receive updates on statuses of user's orders, performed swaps and current active positions on third party platforms (e.g. Compound Finance).
+
     **Socket.io**
     
-    There is also `socket.io` specification which could be found [here](socket.html)
+    `socket.io` specification which could be found [here](socket.html)
 
     **Authorization**
 
-    `Access token` is `base64` encoded JSON with following structure
+    Some of the HTTP and Socket.io endpoints are protected (user-based), thus require to include access token within a request and connection.
+
+    `Access token` is `base64` encoded JSON, which should be used as `Bearer` authorization token and have the following structure.
     ```
     {
       ttl: number, // UNIX token expiration timestamp used in signature
@@ -17,6 +27,10 @@ info:
       signature: string, // Signature of login message
     }
     ```
+  contact:
+    name: opium.team support
+    email: info@opium.team
+    url: https://opium.team
 host: api.test.swaprate.finance
 basePath: /v1
 schemes:
@@ -34,7 +48,7 @@ securityDefinitions:
 paths:
   /auth/loginData:
     get:
-      summary: Returns login message to sign and parameters
+      summary: Returns login parameters and login message to sign in `EIP712` format
       tags:
         - Authentication
       responses:
@@ -44,7 +58,7 @@ paths:
             $ref: '#/definitions/GetAuthLoginDataResponse'
   /meta/config:
     get:
-      summary: Returns object with configuration
+      summary: Returns object with relayer configuration
       tags:
         - Meta
       responses:
@@ -64,7 +78,7 @@ paths:
             $ref: '#/definitions/GetProductsResponse'
   /products/{productId}/quote:
     get:
-      summary: get the fixed rate of product that is possible with selected nominal
+      summary: Returns the possible fixed rate settlement on product with required nominal and maturity
       tags: 
         - Products
       parameters:
@@ -96,7 +110,7 @@ paths:
           description: Too many requests
   /wallet/balance:
     get:
-      summary: Returns object with balances and allowances
+      summary: Returns object with user's token balances and allowances
       security:
         - AccessToken: []
       tags:
@@ -112,7 +126,7 @@ paths:
           description: Forbidden
   /orders/form:
     post:
-      summary: Forms blockchain order to sign
+      summary: Forms blockchain order to be signed by user in `EIP712` format
       security:
         - AccessToken: []
       tags:
@@ -141,7 +155,7 @@ paths:
           description: Too many requests
   /orders/sign:
     post:
-      summary: Accepts signed order and pushes it to matching engine
+      summary: Receives signed order and pushes it to matching engine
       security:
         - AccessToken: []
       tags:
@@ -172,7 +186,7 @@ paths:
           description: Too many requests
   /orders/cancel:
     put:
-      summary: Cancels not filled orders
+      summary: Cancels orders by specified ids
       security:
         - AccessToken: []
       tags:
@@ -274,7 +288,6 @@ definitions:
     properties:
       productId:
         type: string
-        required: true
       pay:
         type: object
         properties:
@@ -285,7 +298,6 @@ definitions:
               - FLOATING
             description: |-
               `pay.type` and `receive.type` are mutually exclusive
-            required: true
           rate:
             type: number
             description: Only considered if `type = FIXED`
@@ -301,7 +313,6 @@ definitions:
               - FLOATING
             description: |-
               `pay.type` and `receive.type` are mutually exclusive
-            required: true
           rate:
             type: number
             description: Only considered if `type = FIXED`
@@ -309,19 +320,15 @@ definitions:
             max: 1
       nominal:
         type: number
-        required: true
       maturity:
         type: number
         description: UNIX timestamp of one of supported maturities in seconds
-        required: true
       partialFill:
         type: boolean
-        required: true
       aggregate:
         type: string
         default: 'NONE'
         enum: ['NONE', 'FIXED_RATE_COMPOUND']
-        required: false
   PostOrdersFormResponseBody:
     type: object
     properties:
