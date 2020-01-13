@@ -389,6 +389,8 @@ definitions:
               type: number
             allowance:
               type: number
+            compoundSupplyAllowance:
+              type: number 
   OrderQuoteResponseBody:
     type: object
     properties:
