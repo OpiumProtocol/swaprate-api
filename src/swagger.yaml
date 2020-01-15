@@ -278,6 +278,8 @@ definitions:
         properties:
           TokenSpender:
             type: string
+          CompoundSupplyAggregator: 
+            type: string
       supportedMaturities:
         type: array
         items:
@@ -389,6 +391,8 @@ definitions:
               type: number
             allowance:
               type: number
+            compoundSupplyAllowance:
+              type: number 
   OrderQuoteResponseBody:
     type: object
     properties:
