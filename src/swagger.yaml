@@ -278,6 +278,8 @@ definitions:
         properties:
           TokenSpender:
             type: string
+          CompoundSupplyAggregator: 
+            type: string
       supportedMaturities:
         type: array
         items:
