@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  version: '1.1.4'
+  version: '1.1.5'
   title: "SwapRate API"
   description: |-
     **Description**
@@ -253,6 +253,15 @@ definitions:
           type: string
         token:
           type: string
+        type:
+          type: string
+          enum:
+            - COMPOUND
+        subtype:
+          type: string
+          enum:
+            - SUPPLY
+            - BORROW
   GetMetaConfigResponse:
     type: object
     properties:
