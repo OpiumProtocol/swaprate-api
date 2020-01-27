@@ -87,7 +87,7 @@
 <a id="user-content-swap-rate-socketio-endpoint-specification" class="anchor" href="#swap-rate-socketio-endpoint-specification" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Swap Rate socket.io endpoint specification</h1>
 <h2>
 <a id="user-content-version" class="anchor" href="#version" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Version</h2>
-<p>v1.1.4</p>
+<p>v1.1.5</p>
 <p>Use <code>socket.io</code> namespace <code>v1</code></p>
 <h2>
 <a id="user-content-endpoint" class="anchor" href="#endpoint" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Endpoint</h2>
@@ -472,7 +472,8 @@
     nominal: number,
     token: string,
     maturity: number,
-    txHash: string
+    txHash: string,
+    fixedrate: null | { depositAmount: number }
   }]
 }
 </code></pre>
@@ -613,6 +614,23 @@
 <ul>
 <li>
 <code>txHash</code> is transaction hash on Ethereum network (frontend leads users to etherscan)</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>
+<code>fixedRate</code> is object with fixedrate related data, could be <code>null</code>
+</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<code>depositAmount</code> is amount of currently available deposit</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

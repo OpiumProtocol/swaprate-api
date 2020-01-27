@@ -2,7 +2,7 @@
 
 ## Version
 
-v1.1.4
+v1.1.5
 
 Use `socket.io` namespace `v1`
 
@@ -225,7 +225,8 @@ Requires authentication to build subscription message.
     nominal: number,
     token: string,
     maturity: number,
-    txHash: string
+    txHash: string,
+    fixedrate: null | { depositAmount: number }
   }]
 }
 ```
@@ -250,6 +251,8 @@ Requires authentication to build subscription message.
 - - `token` is an address of token of nominal
 - - `maturity` is maturity UNIX timestamp in seconds
 - - `txHash` is transaction hash on Ethereum network (frontend leads users to etherscan)
+- - `fixedRate` is object with fixedrate related data, could be `null`
+- - - `depositAmount` is amount of currently available deposit
 
 ## Data channel `positions:address` **NOT FINISHED YET**
 
