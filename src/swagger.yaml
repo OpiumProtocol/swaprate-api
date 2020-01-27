@@ -400,7 +400,7 @@ definitions:
           properties:
             title:
               type: string
-            balance:
+            total:
               type: number
             allowance:
               type: number
