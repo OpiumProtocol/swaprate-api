@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  version: '1.1.6'
+  version: '1.1.7'
   title: "SwapRate API"
   description: |-
     **Description**
@@ -266,6 +266,8 @@ definitions:
           type: number
           min: 0
           max: 1
+        fixedRateSupported:
+          type: boolean
   GetMetaConfigResponse:
     type: object
     properties:
