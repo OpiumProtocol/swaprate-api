@@ -2,13 +2,13 @@
 
 ## Version
 
-v1.1.5
+v1.2.0
 
 Use `socket.io` namespace `v1`
 
 ## Endpoint
 
-[https://api.test.swaprate.finance/v1](https://api.test.swaprate.finance/v1)
+[https://api.swaprate.finance/v1](https://api.swaprate.finance/v1)
 
 ## Description
 
@@ -18,11 +18,6 @@ Swap Rate socket.io endpoint allows clients to receive immediate updates on prod
 
 Each channel serves it's own purpose. `Command` channels are used by clients to send commands to server, when `Data` channels are read-only.
 
-## Labels description
-
-- `PUBLIC` - publicly accessible channels
-- `PROTECTED` - data channels accessible only with accessToken
-
 ## Command channel `subscribe`
 
 Receives subscription commands with parameters and subscribes clients on data channels
@@ -30,7 +25,7 @@ Receives subscription commands with parameters and subscribes clients on data ch
 ### Message structure
 ```
 {
-  channel: $DATA_CHANNEL,
+  ch: $DATA_CHANNEL,
   param1: $VALUE_1,
   param2: $VALUE_2,
   param3: $VALUE_3,
@@ -40,8 +35,14 @@ Receives subscription commands with parameters and subscribes clients on data ch
 
 #### Keys
 
-- `channel` only required key, specifies data channel
+- `ch` (channel) is the only required key, specifies data channel
 - Other keys are optional and differs on different data channels, see below
+
+
+## Labels description
+
+- `PUBLIC` - publicly accessible data channels
+- `PROTECTED` - data channels accessible only with accessToken
 
 ## Command channel `unsubscribe`
 
@@ -82,7 +83,7 @@ Product chart shows average fixed percentage on each of maturities (12 months).
 ### Subscription message
 ```
 {
-  channel: 'products:chart',
+  ch: 'products:chart',
   id: $PRODUCT_ID
 }
 ```
@@ -90,12 +91,12 @@ Product chart shows average fixed percentage on each of maturities (12 months).
 ### Data message
 ```
 {
-  channel: 'products:chart',
-  action: 'set',
-  params: {
+  ch: 'products:chart',
+  a: 'set',
+  p: {
     id: $PRODUCT_ID
   },
-  data: {
+  d: {
     payFixed: [{
       timestamp: number,
       value: number | null
@@ -109,9 +110,9 @@ Product chart shows average fixed percentage on each of maturities (12 months).
 ```
 
 #### Keys
-- `action` is a constant made for further protocol upgrades, omit for now
-- `params` is an object of params of subscribe message (i.e. subscribe message with excluded `channel` key)
-- `data` is an object with arrays of charts data
+- `a` (action) is a constant made for further protocol upgrades, omit for now
+- `p` (params) is an object of params of subscribe message (i.e. subscribe message with excluded `ch` key)
+- `d` (data) is an object with arrays of charts data
 - - `payFixed` is an array with chart data, when user selects `PAY: FIXED`
 - - - `timestamp` is maturity UNIX timestamp in seconds
 - - - `value` is current average fixed rate, could be `null` if there are no data, in range from `0..1`
@@ -131,7 +132,7 @@ Requires authentication to build subscription message.
 ### Subscription message
 ```
 {
-  channel: 'orders:address',
+  ch: 'orders:address',
   accessToken: $ACCESS_TOKEN
 }
 ```
@@ -139,10 +140,10 @@ Requires authentication to build subscription message.
 ### Data message
 ```
 {
-  channel: 'orders:address',
-  action: 'set',
-  params: {},
-  data: [{
+  ch: 'orders:address',
+  a: 'set',
+  p: {},
+  d: [{
     orderId: string,
     createdAt: number,
     pay: {
@@ -165,9 +166,9 @@ Requires authentication to build subscription message.
 ```
 
 #### Keys
-- `action` is a constant made for further protocol upgrades, omit for now
-- `params` is an object of params of subscribe message (i.e. subscribe message with excluded `channel` key)
-- `data` is an array of orders data
+- `a` (action) is a constant made for further protocol upgrades, omit for now
+- `p` (params) is an object of params of subscribe message (i.e. subscribe message with excluded `ch` key)
+- `d` (data) is an array of orders data
 - - `orderId` is order ID
 - - `createdAt` is UNIX timestamp of order creation in seconds
 - - `pay` is an object which shows what user wanted to pay
@@ -196,7 +197,7 @@ Requires authentication to build subscription message.
 ### Subscription message
 ```
 {
-  channel: 'swaps:address',
+  ch: 'swaps:address',
   accessToken: $ACCESS_TOKEN
 }
 ```
@@ -204,10 +205,10 @@ Requires authentication to build subscription message.
 ### Data message
 ```
 {
-  channel: 'swaps:address',
-  action: 'set',
-  params: {},
-  data: [{
+  ch: 'swaps:address',
+  a: 'set',
+  p: {},
+  d: [{
     swapId: string,
     createdAt: number,
     pay: {
@@ -232,9 +233,9 @@ Requires authentication to build subscription message.
 ```
 
 #### Keys
-- `action` is a constant made for further protocol upgrades, omit for now
-- `params` is an object of params of subscribe message (i.e. subscribe message with excluded `channel` key)
-- `data` is an array of swaps data
+- `a` (action) is a constant made for further protocol upgrades, omit for now
+- `p` (params) is an object of params of subscribe message (i.e. subscribe message with excluded `ch` key)
+- `d` (data) is an array of swaps data
 - - `swapId` is swap ID
 - - `createdAt` is UNIX timestamp of order creation in seconds
 - - `pay` is an object which shows what user wanted to pay
@@ -254,7 +255,7 @@ Requires authentication to build subscription message.
 - - `fixedRate` is object with fixedrate related data, could be `null`
 - - - `depositAmount` is amount of currently available deposit
 
-## Data channel `positions:address` **NOT FINISHED YET**
+## Data channel `positions:address`
 
 ### LABELS
 - `PROTECTED`
@@ -266,7 +267,7 @@ Requires authentication to build subscription message.
 ### Subscription message
 ```
 {
-  channel: 'positions:address',
+  ch: 'positions:address',
   accessToken: $ACCESS_TOKEN
 }
 ```
@@ -274,10 +275,10 @@ Requires authentication to build subscription message.
 ### Data message
 ```
 {
-  channel: 'positions:address',
-  action: 'set',
-  params: {},
-  data: [{
+  ch: 'positions:address',
+  a: 'set',
+  p: {},
+  d: [{
     type: string, // L, D
     createdAt: number,
     pay: {
@@ -312,9 +313,9 @@ Requires authentication to build subscription message.
 ```
 
 #### Keys
-- `action` is a constant made for further protocol upgrades, omit for now
-- `params` is an object of params of subscribe message (i.e. subscribe message with excluded `channel` key)
-- `data` is an array of positions data
+- `a` (action) is a constant made for further protocol upgrades, omit for now
+- `p` (params) is an object of params of subscribe message (i.e. subscribe message with excluded `ch` key)
+- `d` (data) is an array of positions data
 - - `type` is an ENUM [`L`, `D`] of position type
 - - `createdAt` is UNIX timestamp of order creation in seconds
 - - `pay` is an object which shows what user pays, could be `null` if there are no data
@@ -340,4 +341,3 @@ Requires authentication to build subscription message.
 - - - - `description` is description for UI
 - - - `nominal` is nominal user wanted to cover
 - - - `maturity` is maturity UNIX timestamp in seconds
-

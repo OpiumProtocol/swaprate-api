@@ -87,11 +87,11 @@
 <a id="user-content-swap-rate-socketio-endpoint-specification" class="anchor" href="#swap-rate-socketio-endpoint-specification" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Swap Rate socket.io endpoint specification</h1>
 <h2>
 <a id="user-content-version" class="anchor" href="#version" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Version</h2>
-<p>v1.1.5</p>
+<p>v1.2.0</p>
 <p>Use <code>socket.io</code> namespace <code>v1</code></p>
 <h2>
 <a id="user-content-endpoint" class="anchor" href="#endpoint" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Endpoint</h2>
-<p><a href="https://api.test.swaprate.finance/v1" rel="nofollow">https://api.test.swaprate.finance/v1</a></p>
+<p><a href="https://api.swaprate.finance/v1" rel="nofollow">https://api.swaprate.finance/v1</a></p>
 <h2>
 <a id="user-content-description" class="anchor" href="#description" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Description</h2>
 <p>Swap Rate socket.io endpoint allows clients to receive immediate updates on products' charts and users' orders, swaps and positions on third party projects</p>
@@ -99,21 +99,13 @@
 <a id="user-content-channels" class="anchor" href="#channels" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Channels</h1>
 <p>Each channel serves it's own purpose. <code>Command</code> channels are used by clients to send commands to server, when <code>Data</code> channels are read-only.</p>
 <h2>
-<a id="user-content-labels-description" class="anchor" href="#labels-description" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Labels description</h2>
-<ul>
-<li>
-<code>PUBLIC</code> - publicly accessible channels</li>
-<li>
-<code>PROTECTED</code> - data channels accessible only with accessToken</li>
-</ul>
-<h2>
 <a id="user-content-command-channel-subscribe" class="anchor" href="#command-channel-subscribe" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Command channel <code>subscribe</code>
 </h2>
 <p>Receives subscription commands with parameters and subscribes clients on data channels</p>
 <h3>
 <a id="user-content-message-structure" class="anchor" href="#message-structure" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Message structure</h3>
 <pre><code>{
-  channel: $DATA_CHANNEL,
+  ch: $DATA_CHANNEL,
   param1: $VALUE_1,
   param2: $VALUE_2,
   param3: $VALUE_3,
@@ -124,8 +116,16 @@
 <a id="user-content-keys" class="anchor" href="#keys" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Keys</h4>
 <ul>
 <li>
-<code>channel</code> only required key, specifies data channel</li>
+<code>ch</code> (channel) is the only required key, specifies data channel</li>
 <li>Other keys are optional and differs on different data channels, see below</li>
+</ul>
+<h2>
+<a id="user-content-labels-description" class="anchor" href="#labels-description" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Labels description</h2>
+<ul>
+<li>
+<code>PUBLIC</code> - publicly accessible data channels</li>
+<li>
+<code>PROTECTED</code> - data channels accessible only with accessToken</li>
 </ul>
 <h2>
 <a id="user-content-command-channel-unsubscribe" class="anchor" href="#command-channel-unsubscribe" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Command channel <code>unsubscribe</code>
@@ -171,19 +171,19 @@
 <h3>
 <a id="user-content-subscription-message" class="anchor" href="#subscription-message" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Subscription message</h3>
 <pre><code>{
-  channel: 'products:chart',
+  ch: 'products:chart',
   id: $PRODUCT_ID
 }
 </code></pre>
 <h3>
 <a id="user-content-data-message" class="anchor" href="#data-message" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Data message</h3>
 <pre><code>{
-  channel: 'products:chart',
-  action: 'set',
-  params: {
+  ch: 'products:chart',
+  a: 'set',
+  p: {
     id: $PRODUCT_ID
   },
-  data: {
+  d: {
     payFixed: [{
       timestamp: number,
       value: number | null
@@ -199,11 +199,11 @@
 <a id="user-content-keys-2" class="anchor" href="#keys-2" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Keys</h4>
 <ul>
 <li>
-<code>action</code> is a constant made for further protocol upgrades, omit for now</li>
+<code>a</code> (action) is a constant made for further protocol upgrades, omit for now</li>
 <li>
-<code>params</code> is an object of params of subscribe message (i.e. subscribe message with excluded <code>channel</code> key)</li>
+<code>p</code> (params) is an object of params of subscribe message (i.e. subscribe message with excluded <code>ch</code> key)</li>
 <li>
-<code>data</code> is an object with arrays of charts data</li>
+<code>d</code> (data) is an object with arrays of charts data</li>
 <li>
 <ul>
 <li>
@@ -274,17 +274,17 @@
 <h3>
 <a id="user-content-subscription-message-1" class="anchor" href="#subscription-message-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Subscription message</h3>
 <pre><code>{
-  channel: 'orders:address',
+  ch: 'orders:address',
   accessToken: $ACCESS_TOKEN
 }
 </code></pre>
 <h3>
 <a id="user-content-data-message-1" class="anchor" href="#data-message-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Data message</h3>
 <pre><code>{
-  channel: 'orders:address',
-  action: 'set',
-  params: {},
-  data: [{
+  ch: 'orders:address',
+  a: 'set',
+  p: {},
+  d: [{
     orderId: string,
     createdAt: number,
     pay: {
@@ -309,11 +309,11 @@
 <a id="user-content-keys-3" class="anchor" href="#keys-3" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Keys</h4>
 <ul>
 <li>
-<code>action</code> is a constant made for further protocol upgrades, omit for now</li>
+<code>a</code> (action) is a constant made for further protocol upgrades, omit for now</li>
 <li>
-<code>params</code> is an object of params of subscribe message (i.e. subscribe message with excluded <code>channel</code> key)</li>
+<code>p</code> (params) is an object of params of subscribe message (i.e. subscribe message with excluded <code>ch</code> key)</li>
 <li>
-<code>data</code> is an array of orders data</li>
+<code>d</code> (data) is an array of orders data</li>
 <li>
 <ul>
 <li>
@@ -444,17 +444,17 @@
 <h3>
 <a id="user-content-subscription-message-2" class="anchor" href="#subscription-message-2" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Subscription message</h3>
 <pre><code>{
-  channel: 'swaps:address',
+  ch: 'swaps:address',
   accessToken: $ACCESS_TOKEN
 }
 </code></pre>
 <h3>
 <a id="user-content-data-message-2" class="anchor" href="#data-message-2" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Data message</h3>
 <pre><code>{
-  channel: 'swaps:address',
-  action: 'set',
-  params: {},
-  data: [{
+  ch: 'swaps:address',
+  a: 'set',
+  p: {},
+  d: [{
     swapId: string,
     createdAt: number,
     pay: {
@@ -481,11 +481,11 @@
 <a id="user-content-keys-4" class="anchor" href="#keys-4" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Keys</h4>
 <ul>
 <li>
-<code>action</code> is a constant made for further protocol upgrades, omit for now</li>
+<code>a</code> (action) is a constant made for further protocol upgrades, omit for now</li>
 <li>
-<code>params</code> is an object of params of subscribe message (i.e. subscribe message with excluded <code>channel</code> key)</li>
+<code>p</code> (params) is an object of params of subscribe message (i.e. subscribe message with excluded <code>ch</code> key)</li>
 <li>
-<code>data</code> is an array of swaps data</li>
+<code>d</code> (data) is an array of swaps data</li>
 <li>
 <ul>
 <li>
@@ -635,7 +635,7 @@
 </li>
 </ul>
 <h2>
-<a id="user-content-data-channel-positionsaddress-not-finished-yet" class="anchor" href="#data-channel-positionsaddress-not-finished-yet" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Data channel <code>positions:address</code> <strong>NOT FINISHED YET</strong>
+<a id="user-content-data-channel-positionsaddress" class="anchor" href="#data-channel-positionsaddress" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Data channel <code>positions:address</code>
 </h2>
 <h3>
 <a id="user-content-labels-4" class="anchor" href="#labels-4" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>LABELS</h3>
@@ -647,17 +647,17 @@
 <h3>
 <a id="user-content-subscription-message-3" class="anchor" href="#subscription-message-3" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Subscription message</h3>
 <pre><code>{
-  channel: 'positions:address',
+  ch: 'positions:address',
   accessToken: $ACCESS_TOKEN
 }
 </code></pre>
 <h3>
 <a id="user-content-data-message-3" class="anchor" href="#data-message-3" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Data message</h3>
 <pre><code>{
-  channel: 'positions:address',
-  action: 'set',
-  params: {},
-  data: [{
+  ch: 'positions:address',
+  a: 'set',
+  p: {},
+  d: [{
     type: string, // L, D
     createdAt: number,
     pay: {
@@ -694,11 +694,11 @@
 <a id="user-content-keys-5" class="anchor" href="#keys-5" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Keys</h4>
 <ul>
 <li>
-<code>action</code> is a constant made for further protocol upgrades, omit for now</li>
+<code>a</code> (action) is a constant made for further protocol upgrades, omit for now</li>
 <li>
-<code>params</code> is an object of params of subscribe message (i.e. subscribe message with excluded <code>channel</code> key)</li>
+<code>p</code> (params) is an object of params of subscribe message (i.e. subscribe message with excluded <code>ch</code> key)</li>
 <li>
-<code>data</code> is an array of positions data</li>
+<code>d</code> (data) is an array of positions data</li>
 <li>
 <ul>
 <li>
